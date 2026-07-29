@@ -3,45 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Лунария — Столичный город</title>
+  <title>Лунария — Столичный город магии и света</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Comfortaa:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Forum&display=swap" rel="stylesheet">
 
   <style>
-    /* ПЕРЕМЕННЫЕ СВЕТЛОЙ И ТЕМНОЙ ТЕМЫ */
     :root {
-      --bg-gradient: linear-gradient(135deg, #e0f7fa 0%, #fffdf5 50%, #e0f2f1 100%);
-      --bg-creamy: rgba(255, 253, 245, 0.95);
-      --card-border: rgba(120, 210, 214, 0.4);
-      --primary-soft: #78d2d6;
-      --accent-color: #f5e0ac;
-      --text-main: #2c4a52;
-      --text-muted: #6b8e96;
-      --shadow-soft: 0 15px 35px rgba(120, 210, 214, 0.15);
-      --glow-light: 0 0 20px rgba(245, 224, 172, 0.6);
-      --particles: rgba(120, 210, 214, 0.15);
-      --th-bg: rgba(120, 210, 214, 0.2);
+      --bg-gradient: linear-gradient(135deg, #f0fdf4 0%, #fefce8 50%, #e0f2fe 100%);
+      --bg-creamy: rgba(255, 255, 255, 0.85);
+      --card-border: rgba(125, 211, 252, 0.4);
+      --primary-soft: #0284c7;
+      --primary-hover: #0369a1;
+      --accent-color: #f59e0b;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --shadow-soft: 0 20px 40px -15px rgba(2, 132, 199, 0.15);
+      --glow-light: 0 0 25px rgba(2, 132, 199, 0.25);
+      --particles: rgba(2, 132, 199, 0.08);
+      --th-bg: rgba(240, 249, 255, 0.8);
     }
 
     [data-theme="dark"] {
-      --bg-gradient: radial-gradient(circle at top, #14213d 0%, #070d1e 100%);
-      --bg-creamy: rgba(15, 28, 54, 0.95);
-      --card-border: rgba(91, 192, 190, 0.3);
-      --primary-soft: #5bc0be;
-      --accent-color: #90e0ef;
-      --text-main: #e0f2fe;
+      --bg-gradient: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
+      --bg-creamy: rgba(15, 23, 42, 0.85);
+      --card-border: rgba(56, 189, 248, 0.2);
+      --primary-soft: #38bdf8;
+      --primary-hover: #7dd3fc;
+      --accent-color: #fbbf24;
+      --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --shadow-soft: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(91, 192, 190, 0.2);
-      --glow-light: 0 0 20px rgba(91, 192, 190, 0.5);
-      --particles: rgba(91, 192, 190, 0.1);
-      --th-bg: rgba(91, 192, 190, 0.15);
+      --shadow-soft: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.1);
+      --glow-light: 0 0 25px rgba(56, 189, 248, 0.3);
+      --particles: rgba(56, 189, 248, 0.05);
+      --th-bg: rgba(30, 41, 59, 0.6);
     }
 
-    /* КУРСОР И ОБЩИЕ СТИЛИ */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2378d2d6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4l7.07 16.97 2.51-7.39 7.39-2.51L4 4z'/%3E%3C/svg%3E") 4 4, auto;
       font-family: 'Comfortaa', cursive, sans-serif;
       background: var(--bg-gradient);
       color: var(--text-main);
@@ -54,156 +55,152 @@
       overflow-x: hidden;
       transition: background 0.5s ease, color 0.5s ease;
     }
-    
-    a, button, input, .social-btn, .resident-card, .gallery-item {
-      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23f5e0ac' stroke='%232c4a52' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4l7.07 16.97 2.51-7.39 7.39-2.51L4 4z'/%3E%3C/svg%3E") 4 4, pointer !important;
-    }
-
-    .cursor-sparkle {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      background: var(--accent-color);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      animation: sparkleAnim 0.6s ease-out forwards;
-    }
-
-    @keyframes sparkleAnim {
-      0% { transform: scale(1) translateY(0); opacity: 1; }
-      100% { transform: scale(0) translateY(18px); opacity: 0; }
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body::before {
       content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: radial-gradient(circle, var(--particles) 1.5px, transparent 1.5px);
-      background-size: 50px 50px; animation: magicFloat 60s linear infinite; z-index: -1; pointer-events: none;
+      background: radial-gradient(circle, var(--particles) 2px, transparent 2px);
+      background-size: 40px 40px; animation: magicFloat 40s linear infinite; z-index: -1; pointer-events: none;
     }
 
     @keyframes magicFloat {
-      0% { background-position: 0px 0px; }
-      100% { background-position: 500px 500px; }
+      0% { background-position: 0 0; }
+      100% { background-position: 400px 400px; }
     }
 
-    .container { max-width: 1040px; width: 100%; z-index: 1; display: flex; flex-direction: column; gap: 2.5rem; }
+    .container { max-width: 1080px; width: 100%; z-index: 1; display: flex; flex-direction: column; gap: 2.5rem; }
 
     /* ШАПКА */
     header {
       background: var(--bg-creamy); border: 1px solid var(--card-border); border-radius: 35px;
-      padding: 3rem 2.5rem; text-align: center; box-shadow: var(--shadow-soft);
-      position: relative; backdrop-filter: blur(10px);
+      padding: 3.5rem 2.5rem; text-align: center; box-shadow: var(--shadow-soft);
+      position: relative; backdrop-filter: blur(16px);
     }
 
-    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 12px; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 12px; }
     .left-group, .right-group { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
-    .download-badge {
-      background: linear-gradient(135deg, var(--primary-soft), #5eb3b8); color: #fff;
-      padding: 0.7rem 1.5rem; border-radius: 20px; font-size: 0.9rem; font-weight: 700;
+    .badge-btn {
+      background: var(--primary-soft); color: #fff;
+      padding: 0.7rem 1.4rem; border-radius: 20px; font-size: 0.9rem; font-weight: 700;
       border: none; display: flex; align-items: center; gap: 8px;
-      text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(120, 210, 214, 0.4);
+      text-decoration: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
     }
-    .download-badge:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(120, 210, 214, 0.6); color: #fff; }
-    .download-badge svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+    .badge-btn:hover { transform: translateY(-3px); background: var(--primary-hover); box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5); color: #fff; }
+    .badge-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
 
-    .social-btn {
-      width: 42px; height: 42px; border-radius: 50%; background: transparent;
+    .social-btn, .control-btn {
+      width: 44px; height: 44px; border-radius: 50%; background: var(--th-bg);
       border: 1px solid var(--card-border); color: var(--text-main); display: flex; align-items: center;
-      justify-content: center; transition: all 0.3s ease; text-decoration: none;
+      justify-content: center; transition: all 0.3s ease; text-decoration: none; cursor: pointer;
     }
-    .social-btn:hover { transform: translateY(-3px); border-color: var(--primary-soft); box-shadow: var(--glow-light); color: var(--primary-soft); }
-    .social-btn svg { width: 18px; height: 18px; }
+    .social-btn:hover, .control-btn:hover { transform: translateY(-3px); border-color: var(--primary-soft); box-shadow: var(--glow-light); color: var(--primary-soft); }
+    .social-btn svg, .control-btn svg { width: 20px; height: 20px; fill: currentColor; stroke: currentColor; stroke-width: 1.5; }
 
-    .control-btn {
-      background: transparent; border: 1px solid var(--primary-soft); color: var(--text-main);
-      width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;
+    .logo-container {
+      max-width: 180px; width: 100%; margin: 0 auto 1rem auto;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+      animation: floatLogo 4s ease-in-out infinite;
     }
-    .control-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
-    .control-btn:hover { background: var(--primary-soft); color: #fff; box-shadow: var(--glow-light); transform: rotate(15deg); }
+    @keyframes floatLogo {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .logo-container svg { width: 100%; height: auto; display: block; }
+    .logo-container svg path { fill: var(--text-main); transition: fill 0.5s ease; }
 
-    .logo-img { max-width: 280px; height: auto; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15)); }
-    .subtitle { color: var(--primary-soft); font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; }
+    .title-main {
+      font-family: 'Forum', serif; font-size: 3rem; letter-spacing: 0.04em; margin-bottom: 0.5px;
+      background: linear-gradient(135deg, var(--text-main) 30%, var(--primary-soft));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .subtitle { color: var(--primary-soft); font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; }
     
     .metro-badge {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: rgba(239, 68, 68, 0.12); border: 2px solid #ef4444; color: #ef4444;
-      padding: 0.5rem 1.3rem; border-radius: 20px; font-weight: 700; font-size: 0.95rem;
-      margin-bottom: 1.5rem; box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(239, 68, 68, 0.1); border: 1.5px solid #ef4444; color: #ef4444;
+      padding: 0.5rem 1.2rem; border-radius: 20px; font-weight: 700; font-size: 0.9rem;
+      margin-bottom: 1.5rem; box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
     }
-    .metro-badge svg { width: 18px; height: 18px; fill: currentColor; }
+    .metro-badge svg { width: 16px; height: 16px; fill: currentColor; }
 
-    .description { color: var(--text-muted); font-size: 1.05rem; line-height: 1.8; max-width: 720px; margin: 0 auto; }
+    .description { color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; max-width: 760px; margin: 0 auto; }
 
-    /* ОБЩИЕ СЕКЦИИ */
+    /* СЕКЦИИ */
     .section-box {
       background: var(--bg-creamy); border: 1px solid var(--card-border); border-radius: 35px;
-      padding: 3rem 2.5rem; box-shadow: var(--shadow-soft); backdrop-filter: blur(10px);
+      padding: 3rem 2.5rem; box-shadow: var(--shadow-soft); backdrop-filter: blur(16px);
       transition: transform 0.3s ease;
     }
-    .section-box:hover { transform: translateY(-3px); }
 
     .section-title {
-      font-family: 'Cinzel Decorative', serif; font-size: 1.8rem; color: var(--text-main);
-      margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px;
+      font-family: 'Forum', serif; letter-spacing: 0.05em; font-size: 2.2rem; color: var(--text-main);
+      margin-bottom: 2rem; display: flex; align-items: center; gap: 12px;
     }
     .section-title svg { width: 28px; height: 28px; stroke: var(--primary-soft); fill: none; stroke-width: 2; }
 
+    /* ПРЕИМУЩЕСТВА ГОРОДА */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+    .feature-card {
+      background: var(--th-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 1.8rem;
+      text-align: center; transition: all 0.3s ease;
+    }
+    .feature-card:hover { transform: translateY(-5px); border-color: var(--primary-soft); box-shadow: var(--glow-light); }
+    .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+    .feature-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--text-main); }
+    .feature-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
+
     /* ЛОР */
-    .lore-single p { color: var(--text-muted); line-height: 1.8; font-size: 1.05rem; margin-bottom: 1rem; }
+    .lore-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; }
+    .lore-text p { color: var(--text-muted); line-height: 1.8; font-size: 1.05rem; margin-bottom: 1rem; }
+    .lore-card-visual {
+      background: var(--th-bg); border: 1px solid var(--card-border); border-radius: 25px; padding: 2rem;
+      position: relative; overflow: hidden;
+    }
+    .lore-quote { font-family: 'Forum', serif; font-size: 1.4rem; color: var(--primary-soft); font-style: italic; line-height: 1.5; }
 
     /* РУКОВОДСТВО */
-    .residents-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 3rem 2rem; margin-top: 3.5rem; }
+    .residents-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 3rem 2rem; margin-top: 3.5rem; }
     .resident-card {
       background: var(--th-bg); border: 1px solid var(--card-border); border-radius: 25px;
       padding: 4.5rem 1.8rem 2rem 1.8rem; text-align: center; transition: all 0.4s ease; position: relative;
     }
     .resident-card:hover { transform: translateY(-8px); border-color: var(--primary-soft); box-shadow: var(--glow-light); }
-    
     .resident-avatar-container {
-      position: absolute; top: -95px; left: 50%; transform: translateX(-50%);
-      width: 140px; height: 160px; pointer-events: none;
+      position: absolute; top: -85px; left: 50%; transform: translateX(-50%);
+      width: 130px; height: 140px; pointer-events: none;
     }
-    .resident-avatar {
-      width: 100%; height: 100%; object-fit: contain; display: block;
-      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3)); transition: transform 0.4s ease;
-    }
-    .resident-card:hover .resident-avatar { transform: scale(1.08) translateY(-6px); }
-    
-    .resident-info { margin-top: 1rem; }
-    .resident-name { font-weight: 700; font-size: 1.2rem; color: var(--text-main); margin-bottom: 0.3rem; }
-    .resident-role { font-size: 0.85rem; font-weight: 600; color: var(--primary-soft); margin-bottom: 0.8rem; }
-    .resident-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+    .resident-avatar { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.25)); transition: transform 0.4s ease; }
+    .resident-card:hover .resident-avatar { transform: scale(1.1) translateY(-5px); }
+    .resident-name { font-weight: 700; font-size: 1.3rem; color: var(--text-main); margin-bottom: 0.3rem; }
+    .resident-role { font-size: 0.9rem; font-weight: 600; color: var(--primary-soft); margin-bottom: 0.8rem; }
+    .resident-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
 
     /* ГАЛЕРЕЯ */
     .gallery-container { display: flex; flex-direction: column; gap: 1.8rem; }
     .gallery-filter-tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: thin; }
     .tab-btn {
       background: var(--th-bg); border: 1px solid var(--card-border); color: var(--text-main);
-      padding: 0.6rem 1.2rem; border-radius: 18px; font-family: inherit; font-size: 0.85rem; font-weight: 700;
-      white-space: nowrap; transition: all 0.3s ease;
+      padding: 0.6rem 1.4rem; border-radius: 18px; font-family: inherit; font-size: 0.9rem; font-weight: 700;
+      white-space: nowrap; transition: all 0.3s ease; cursor: pointer;
     }
     .tab-btn.active, .tab-btn:hover { background: var(--primary-soft); color: #fff; border-color: var(--primary-soft); box-shadow: var(--glow-light); transform: translateY(-2px); }
 
-    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.2rem; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.2rem; }
     .gallery-item {
       position: relative; height: 260px; border-radius: 22px; overflow: hidden; border: 1px solid var(--card-border);
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer;
     }
     .gallery-item:hover { transform: translateY(-6px) scale(1.02); border-color: var(--primary-soft); box-shadow: var(--glow-light); }
-    
     .gallery-bg {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
-      background: linear-gradient(135deg, var(--th-bg), rgba(120, 210, 214, 0.4));
+      background: linear-gradient(135deg, var(--th-bg), rgba(2, 132, 199, 0.3));
       transition: transform 0.5s ease;
     }
     .gallery-item:hover .gallery-bg { transform: scale(1.1); }
-
     .gallery-content {
       position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(to top, rgba(7, 13, 30, 0.95) 0%, rgba(7, 13, 30, 0.4) 50%, transparent 100%);
+      background: linear-gradient(to top, rgba(2, 6, 23, 0.9) 0%, rgba(2, 6, 23, 0.3) 50%, transparent 100%);
       display: flex; flex-direction: column; justify-content: flex-end; padding: 1.2rem; color: #fff;
     }
     .gallery-number {
@@ -211,100 +208,171 @@
       border: 1px solid rgba(255,255,255,0.2); color: var(--accent-color); font-size: 0.75rem; font-weight: 700;
       padding: 0.2rem 0.6rem; border-radius: 12px;
     }
-    .gallery-title { font-family: 'Cinzel Decorative', serif; font-size: 1.05rem; margin-bottom: 0.3rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-    .gallery-desc { font-size: 0.8rem; opacity: 0.85; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .gallery-title { font-family: 'Forum', serif; letter-spacing: 0.03em; font-size: 1.3rem; margin-bottom: 0.3rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    .gallery-desc { font-size: 0.85rem; opacity: 0.85; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
     /* ЛАЙТБОКС */
     .lightbox-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(7, 13, 30, 0.85); backdrop-filter: blur(12px);
+      background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(12px);
       z-index: 2000; display: flex; align-items: center; justify-content: center;
       opacity: 0; visibility: hidden; transition: all 0.4s ease; padding: 2rem;
     }
     .lightbox-overlay.active { opacity: 1; visibility: visible; }
-    
     .lightbox-container {
       position: relative; width: 100%; max-width: 1100px; height: 80vh; max-height: 700px;
       border-radius: 35px; overflow: hidden; border: 1px solid var(--card-border);
       box-shadow: 0 25px 60px rgba(0,0,0,0.7); transform: scale(0.95); transition: transform 0.4s ease;
     }
     .lightbox-overlay.active .lightbox-container { transform: scale(1); }
-
     .lightbox-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
     .lightbox-gradient {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(to top, rgba(7, 13, 30, 0.95) 0%, rgba(7, 13, 30, 0.5) 50%, rgba(7, 13, 30, 0.2) 100%);
+      background: linear-gradient(to top, rgba(2, 6, 23, 0.95) 0%, rgba(2, 6, 23, 0.4) 50%, transparent 100%);
       display: flex; flex-direction: column; justify-content: flex-end; padding: 3rem 4rem; color: #fff;
     }
     .lightbox-close {
       position: absolute; top: 20px; right: 20px; width: 45px; height: 45px; border-radius: 50%;
       background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      display: flex; align-items: center; justify-content: center; font-size: 1.5rem; z-index: 10; transition: all 0.3s ease;
+      display: flex; align-items: center; justify-content: center; font-size: 1.5rem; z-index: 10; transition: all 0.3s ease; cursor: pointer;
     }
     .lightbox-close:hover { background: var(--primary-soft); transform: rotate(90deg); }
-
     .lightbox-nav-btn {
       position: absolute; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; border-radius: 50%;
       background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 1.8rem;
-      display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.3s ease;
+      display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.3s ease; cursor: pointer;
     }
-    .lightbox-nav-btn:hover { background: var(--primary-soft); color: #070d1e; }
+    .lightbox-nav-btn:hover { background: var(--primary-soft); color: #0f172a; }
     .lightbox-prev { left: 20px; }
     .lightbox-next { right: 20px; }
-
     .lightbox-badge {
-      display: inline-block; background: var(--primary-soft); color: #070d1e; font-weight: 700;
+      display: inline-block; background: var(--primary-soft); color: #fff; font-weight: 700;
       padding: 0.3rem 0.9rem; border-radius: 12px; font-size: 0.85rem; margin-bottom: 0.8rem; width: max-content;
     }
-    .lightbox-title { font-family: 'Cinzel Decorative', serif; font-size: 2.2rem; margin-bottom: 1rem; }
+    .lightbox-title { font-family: 'Forum', serif; letter-spacing: 0.03em; font-size: 2.6rem; margin-bottom: 1rem; }
     .lightbox-desc { font-size: 1.1rem; line-height: 1.7; opacity: 0.9; max-width: 800px; }
+
+    /* СТИЛИ СТИЛИЗОВАННОЙ РЕКЛАМЫ И УВЕДОМЛЕНИЯ В СТИЛЕ 00-Х */
+    .retro-ad-popup {
+      position: fixed;
+      background: #c0c0c0;
+      border: 2px outset #ffffff;
+      box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
+      font-family: "MS Sans Serif", Tahoma, sans-serif;
+      width: 320px;
+      z-index: 9999;
+      user-select: none;
+    }
+    .retro-ad-titlebar {
+      background: linear-gradient(90deg, #000080, #1084d0);
+      color: white;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .retro-ad-close {
+      background: #c0c0c0;
+      border: 1px outset #ffffff;
+      color: black;
+      font-weight: bold;
+      width: 16px;
+      height: 16px;
+      font-size: 10px;
+      line-height: 12px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .retro-ad-close:active {
+      border-style: inset;
+    }
+    .retro-ad-content {
+      padding: 12px;
+      text-align: center;
+      background: #ece9d8;
+    }
+    .retro-ad-content img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #7f9db9;
+      margin-bottom: 8px;
+    }
+    .retro-ad-text {
+      font-size: 12px;
+      color: #000;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    .retro-ad-btn {
+      background: #dfdfdf;
+      border: 2px outset #ffffff;
+      padding: 4px 12px;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .retro-ad-btn:active {
+      border-style: inset;
+    }
+
+    /* Уведомление об adblock (более заметное, с исчезновением) */
+    .adblock-notification {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: #ffffe0;
+      border: 2px outset #ffffff;
+      outline: 2px solid #cc0000;
+      padding: 14px 20px;
+      font-family: "MS Sans Serif", Tahoma, sans-serif;
+      font-size: 13px;
+      font-weight: bold;
+      color: #cc0000;
+      box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
+      z-index: 9998;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: fadeInOut 4s ease forwards;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateY(20px); }
+      15% { opacity: 1; transform: translateY(0); }
+      85% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(20px); pointer-events: none; }
+    }
 
     /* БАННЕР ПЕРЕЕЗДА */
     .relocate-banner {
-      background: linear-gradient(135deg, rgba(120, 210, 214, 0.2), rgba(245, 224, 172, 0.25));
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.15), rgba(245, 158, 11, 0.15));
       border: 2px dashed var(--primary-soft); border-radius: 35px; padding: 3.5rem 2rem; text-align: center;
       box-shadow: var(--shadow-soft);
     }
-    .relocate-banner h2 { font-family: 'Cinzel Decorative', serif; font-size: 2.2rem; color: var(--text-main); margin-bottom: 1rem; }
-    .relocate-banner p { color: var(--text-muted); font-size: 1.05rem; line-height: 1.8; max-width: 650px; margin: 0 auto 2rem auto; }
+    .relocate-banner h2 { font-family: 'Forum', serif; letter-spacing: 0.05em; font-size: 2.6rem; color: var(--text-main); margin-bottom: 1rem; }
+    .relocate-banner p { color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; max-width: 650px; margin: 0 auto 2rem auto; }
     .relocate-btn {
-      background: linear-gradient(135deg, var(--primary-soft), #5eb3b8); color: #fff;
-      padding: 0.9rem 2.2rem; border-radius: 25px; font-size: 1.1rem; font-weight: 700;
+      background: var(--primary-soft); color: #fff;
+      padding: 1rem 2.5rem; border-radius: 25px; font-size: 1.1rem; font-weight: 700;
       border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
-      transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(120, 210, 214, 0.5);
+      transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4); cursor: pointer;
     }
-    .relocate-btn:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 8px 25px rgba(120, 210, 214, 0.8); color: #fff; }
+    .relocate-btn:hover { transform: translateY(-4px) scale(1.05); background: var(--primary-hover); box-shadow: 0 8px 25px rgba(2, 132, 199, 0.6); color: #fff; }
 
-    /* РЕКЛАМНЫЙ ПОП-АП (РЕТРО) */
-    .simple-ad-popup {
-      position: fixed; background: #ffffff; border: 3px outset #dfdfdf;
-      box-shadow: 5px 5px 20px rgba(0,0,0,0.4); z-index: 3000; display: none; padding: 4px; width: 300px;
-    }
-    .simple-ad-titlebar {
-      background: linear-gradient(90deg, #000080, #1084d0); color: #ffffff; padding: 4px 8px;
-      font-size: 0.8rem; font-weight: bold; display: flex; justify-content: space-between; align-items: center;
-    }
-    .simple-ad-close {
-      background: #c0c0c0; color: #000000; border: 1px outset #ffffff; width: 18px; height: 18px;
-      font-weight: bold; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
-    }
-    .simple-ad-body { background: #ffffff; padding: 6px; text-align: center; border: 1px inset #dfdfdf; }
-    .simple-ad-img { width: 100%; height: 200px; object-fit: cover; display: block; border: 1px solid #7f7f7f; margin-bottom: 6px; }
-    .simple-ad-btn {
-      display: block; width: 100%; background: #e1e1e1; color: #000000; border: 2px outset #ffffff;
-      padding: 6px; font-weight: bold; font-size: 0.85rem; text-decoration: none; text-align: center;
-    }
-
-    footer { text-align: center; color: var(--text-muted); font-size: 0.9rem; display: flex; flex-direction: column; gap: 6px; }
+    footer { text-align: center; color: var(--text-muted); font-size: 0.95rem; display: flex; flex-direction: column; gap: 6px; padding-top: 1rem; }
     .creators-tag { font-weight: 700; color: var(--primary-soft); }
 
-    @media (max-width: 700px) {
+    @media (max-width: 768px) {
+      .lore-grid { grid-template-columns: 1fr; }
       .section-box { padding: 1.8rem; }
-      .relocate-banner h2 { font-size: 1.6rem; }
+      .title-main { font-size: 2.2rem; }
+      .relocate-banner h2 { font-size: 2rem; }
       .lightbox-container { height: 90vh; }
       .lightbox-gradient { padding: 1.5rem; }
-      .lightbox-title { font-size: 1.5rem; }
-      .simple-ad-popup { width: 92%; }
+      .lightbox-title { font-size: 2rem; }
     }
   </style>
 </head>
@@ -315,18 +383,14 @@
     <header>
       <div class="top-bar">
         <div class="left-group">
-          <a href="https://animunnug.github.io/LunariaRP/" target="_blank" class="download-badge">
+          <a href="https://animunnug.github.io/LunariaRP/" target="_blank" class="badge-btn">
             <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            <span>Ресурспак</span>
+            <span>Скачать ресурспак</span>
           </a>
           
-          <div class="social-links">
-            <a href="https://discord.gg/ВАШ_СЕРВЕР" class="social-btn" target="_blank" title="Discord сервер">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.077.077 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
-              </svg>
-            </a>
-          </div>
+          <a href="https://discord.gg/ВАШ_СЕРВЕР" class="social-btn" target="_blank" title="Discord сервер">
+            <svg viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.077.077 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286z"/></svg>
+          </a>
         </div>
         
         <div class="right-group">
@@ -336,7 +400,15 @@
         </div>
       </div>
       
-      <img src="путь_к_картинке_лунария.png" alt="Лунария" class="logo-img">
+      <div class="logo-container">
+        <svg viewBox="0 0 826 710" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M533.234 296.952L529.363 289.051C530.699 291.661 531.989 294.296 533.234 296.952Z" />
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M533.234 296.952L529.363 289.051C526.201 282.597 518.212 280.205 512.024 283.858L318.361 398.199C283.57 418.837 237.04 416.311 217.289 380.493C152.962 263.832 247.601 109.414 363.39 41.0886C373.02 35.4063 382.841 30.3735 392.807 25.9767C405.876 20.2112 404.737 -0.0395354 390.503 5.79775e-05C333.623 0.158281 278.627 18.5949 226.248 49.5032C62.6083 146.065 6.52277 359.907 100.952 527.168C100.952 527.168 86.9019 549.721 58.4086 553.986C52.1254 554.926 43.5774 555.21 34.0828 555.081C10.8512 554.764 -4.98115 578.023 1.43635 597.741C3.66275 604.582 12.0712 605.75 18.2604 602.083L396.864 377.754C404.279 373.36 413.771 376.232 415.652 384.643C417.055 390.917 417.477 395.866 417.477 395.866C417.592 397.214 417.716 398.659 417.859 400.226C419.139 414.236 417.738 428.432 413.738 441.973C409.738 455.513 403.22 468.123 394.57 479.057C385.92 489.99 375.313 499.024 363.379 505.625C351.445 512.225 338.424 516.258 325.089 517.484C311.754 518.71 298.375 517.105 285.743 512.762C268.538 506.848 249.065 504.826 233.485 514.22L165.349 555.304C147.865 565.846 143.426 589.501 158.386 603.394C182.165 625.474 209.996 642.207 240.231 652.6C270.467 662.994 302.494 666.837 334.415 663.903C366.336 660.968 397.502 651.314 426.07 635.515C454.637 619.714 480.026 598.089 500.731 571.918C521.437 545.746 537.039 515.561 546.615 483.149C556.191 450.737 559.546 416.756 556.481 383.219C553.728 353.092 545.843 323.873 533.234 296.952Z" />
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M824.664 112.675C825.706 116.051 826.101 119.524 825.925 122.959C825.077 139.499 810.98 155.17 791.883 154.909C783.99 154.802 776.757 154.979 770.931 155.582C769.746 155.705 768.619 155.845 767.557 156.004C739.064 160.268 725.013 182.821 725.013 182.821C819.442 350.082 763.357 563.924 599.717 660.486C547.338 691.395 492.342 709.831 435.462 709.989C421.229 710.029 420.09 689.778 433.158 684.013C443.124 679.616 452.946 674.583 462.575 668.901C582.191 598.317 643.069 444.46 584.703 294.047C581.587 286.017 578.25 278.833 574.569 272.067C568.833 261.521 571.615 247.971 581.94 241.846L807.703 107.916C813.893 104.244 822.303 105.407 824.53 112.251C824.576 112.392 824.621 112.534 824.664 112.675Z" />
+        </svg>
+      </div>
+
+      <h1 class="title-main">ЛУНАРИЯ</h1>
       <p class="subtitle">Столичный город магии, света и историй</p>
       
       <div class="metro-badge">
@@ -344,18 +416,48 @@
         <span>Красная ветка, 1145</span>
       </div>
 
-      <p class="description">Сердце нашего мира, раскинувшееся вблизи ключевых путей сообщения. Место, где переплетаются древние тайны, амбициозные проекты архитекторов и уютная атмосфера.</p>
+      <p class="description">Сердце нашего мира, раскинувшееся вблизи ключевых путей сообщения. Место, где переплетаются древние тайны, амбициозные проекты архитекторов и уютная атмосфера живого сообщества.</p>
     </header>
+
+    <!-- ПОЧЕМУ СТОИТ ЖИТЬ В ЛУНАРИИ -->
+    <div class="section-box">
+      <h2 class="section-title">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Почему нас выбирают
+      </h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-icon">✨</span>
+          <div class="feature-title">Топовый дизайн всего</div>
+          <div class="feature-desc">Уникальный стиль построек, гармонично вписанный в ландшафт с кастомным ресурспаком.</div>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">😎</span>
+          <div class="feature-title">Тут живут крутые чуваки</div>
+          <div class="feature-desc">Активные торговцы, строители и надежные соседи со всего сервера.</div>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🎉</span>
+          <div class="feature-title">Веселые ивенты</div>
+          <div class="feature-desc">Регулярные праздники, интерактивные мероприятия и бурная жизнь города.</div>
+        </div>
+      </div>
+    </div>
 
     <!-- ЛОР -->
     <div class="section-box">
       <h2 class="section-title">
         <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        Лор города
+        Лор и история
       </h2>
-      <div class="lore-single">
-        <p>Основанная в эпоху великих переселений, Лунария начиналась как скромный приют для странников у мерцающего источника. Со временем город вырос в величественный бастион культуры и ремесел.</p>
-        <p>Добраться до нас можно через портал на Красной ветке (координата 1145), который служит главным связующим звеном с внешним миром.</p>
+      <div class="lore-grid">
+        <div class="lore-text">
+          <p>Основанная в эпоху великих переселений, Лунария начиналась как скромный приют для странников у мерцающего источника. Со временем город вырос в величественный бастион культуры, торговли и ремесел.</p>
+          <p>Добраться до нас проще простого — через портал на Красной ветке (координата 1145), который служит главным связующим звеном со всеми ключевыми дорогами мира.</p>
+        </div>
+        <div class="lore-card-visual">
+          <div class="lore-quote">«Лунария — это не просто дома и дороги. Это свет, который мы создаем вместе.»</div>
+        </div>
       </div>
     </div>
 
@@ -370,21 +472,17 @@
           <div class="resident-avatar-container">
             <img src="путь_к_картинке_мэра.png" alt="Moonray" class="resident-avatar">
           </div>
-          <div class="resident-info">
-            <div class="resident-name">Moonray</div>
-            <div class="resident-role">Мэр города</div>
-            <div class="resident-desc">Главный градоначальник, идейный вдохновитель и защитник порядка.</div>
-          </div>
+          <div class="resident-name">Moonray</div>
+          <div class="resident-role">Мэр города</div>
+          <div class="resident-desc">Главный градоначальник, идейный вдохновитель и защитник порядка столицы.</div>
         </div>
         <div class="resident-card">
           <div class="resident-avatar-container">
             <img src="путь_к_картинке_жены.png" alt="Tommomy" class="resident-avatar">
           </div>
-          <div class="resident-info">
-            <div class="resident-name">Tommomy</div>
-            <div class="resident-role">Чудесная жена мэра</div>
-            <div class="resident-desc">Хранительница красоты и гармонии в сердце столицы.</div>
-          </div>
+          <div class="resident-name">Tommomy</div>
+          <div class="resident-role">Чудесная жена мэра</div>
+          <div class="resident-desc">Хранительница красоты, уюта и гармонии в самом сердце Лунарии.</div>
         </div>
       </div>
     </div>
@@ -393,7 +491,7 @@
     <div class="section-box">
       <h2 class="section-title">
         <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        Интерактивная экскурсия по Лунарии
+        Интерактивная экскурсия
       </h2>
 
       <div class="gallery-container">
@@ -406,7 +504,6 @@
         </div>
 
         <div class="gallery-grid" id="galleryGrid">
-          <!-- Элементы галереи (1-20) -->
           <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(0)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#01</span><div class="gallery-title">Центральная Библиотека</div><div class="gallery-desc">Хранилище древних фолиантов и чертежей.</div></div></div>
           <div class="gallery-item" data-category="infrastructure" onclick="openLightboxByIndex(1)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#02</span><div class="gallery-title">Портал (Красная ветка, 1145)</div><div class="gallery-desc">Главный вход в наш город с внешних дорог.</div></div></div>
           <div class="gallery-item" data-category="nature" onclick="openLightboxByIndex(2)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#03</span><div class="gallery-title">Лунная площадь</div><div class="gallery-desc">Просторная зона отдыха с монументом.</div></div></div>
@@ -422,7 +519,7 @@
           <div class="gallery-item" data-category="nature" onclick="openLightboxByIndex(12)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#13</span><div class="gallery-title">Парк Весны</div><div class="gallery-desc">Тихое место для отдыха.</div></div></div>
           <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(13)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#14</span><div class="gallery-title">Таверна «Счастливый странник»</div><div class="gallery-desc">Теплая атмосфера и серверные байки.</div></div></div>
           <div class="gallery-item" data-category="infrastructure" onclick="openLightboxByIndex(14)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#15</span><div class="gallery-title">Сторожевая вышка</div><div class="gallery-desc">Высотный дозорный пункт.</div></div></div>
-          <div class="gallery-item" data-category="shops" onclick="openLightboxByIndex(15)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#16</span><div class="gallery-title">Рыды «Самоцвет»</div><div class="gallery-desc">Частные магазинчики местных жителей.</div></div></div>
+          <div class="gallery-item" data-category="shops" onclick="openLightboxByIndex(15)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#16</span><div class="gallery-title">Ряды «Самоцвет»</div><div class="gallery-desc">Частные магазинчики местных жителей.</div></div></div>
           <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(16)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#17</span><div class="gallery-title">Театр Искусств</div><div class="gallery-desc">Сцена для проведения праздников.</div></div></div>
           <div class="gallery-item" data-category="infrastructure" onclick="openLightboxByIndex(17)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#18</span><div class="gallery-title">Банк Лунарии</div><div class="gallery-desc">Надежное хранилище ценностей.</div></div></div>
           <div class="gallery-item" data-category="nature" onclick="openLightboxByIndex(18)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#19</span><div class="gallery-title">Лунный пруд</div><div class="gallery-desc">Водоем с отражением звезд.</div></div></div>
@@ -434,7 +531,7 @@
     <!-- БАННЕР ПЕРЕЕЗДА -->
     <div class="relocate-banner">
       <h2>Стань частью нашей истории!</h2>
-      <p>Лунария открывает свои двери для новых жителей, амбициозных строителей и искателей приключений. Прибывайте через портал на Красной ветке (1145)!</p>
+      <p>Лунария открывает свои двери для новых жителей, амбициозных строителей и искателей приключений. Прибывайте через портал на Красной ветке (1145) или залетайте в наш Discord!</p>
       <a href="https://discord.gg/ВАШ_СЕРВЕР" target="_blank" class="relocate-btn">
         <span>Переехать в Лунарию</span>
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -462,35 +559,7 @@
     </div>
   </div>
 
-  <!-- РЕКЛАМНЫЙ ПОП-АП -->
-  <div id="simpleAd" class="simple-ad-popup">
-    <div class="simple-ad-titlebar">
-      <span>Реклама: Специальное предложение!</span>
-      <button class="simple-ad-close" onclick="closeSimpleAd()">X</button>
-    </div>
-    <div class="simple-ad-body">
-      <img id="simpleAdImg" class="simple-ad-img" src="" alt="Реклама">
-      <a href="#" class="simple-ad-btn" id="simpleAdBtn" target="_blank">Нажмите для перехода &gt;&gt;</a>
-    </div>
-  </div>
-
   <script>
-    // Искры от мышки
-    let lastSparkleTime = 0;
-    document.addEventListener('mousemove', function(e) {
-      const now = Date.now();
-      if (now - lastSparkleTime > 40 && Math.random() > 0.3) { 
-        lastSparkleTime = now;
-        const sparkle = document.createElement('div');
-        sparkle.className = 'cursor-sparkle';
-        sparkle.style.left = e.pageX + 'px';
-        sparkle.style.top = e.pageY + 'px';
-        document.body.appendChild(sparkle);
-        setTimeout(() => sparkle.remove(), 600);
-      }
-    });
-
-    // Темы
     function toggleTheme() {
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
       const newTheme = isDark ? 'light' : 'dark';
@@ -501,7 +570,6 @@
       document.documentElement.setAttribute('data-theme', newTheme);
     }
 
-    // Фильтрация галереи
     function filterGallery(category, event) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
@@ -554,38 +622,79 @@
     function closeLightbox(e) { if (e.target.id === 'lightboxOverlay') forceCloseLightbox(); }
     function forceCloseLightbox() { document.getElementById('lightboxOverlay').classList.remove('active'); }
 
-    // ЛОГИКА РЕКЛАМЫ (С КВИТАНЦИЕЙ ЧЕРЕЗ localStorage НА 2 ЗАКРЫТИЯ)
-    const adList = [
-      { img: "путь_к_рекламной_гифке_1.gif", link: "https://discord.gg/ВАШ_СЕРВЕР" },
-      { img: "путь_к_рекламной_картинке_2.png", link: "https://modrinth.com" }
-    ];
+    // ЛОГИКА НАЗОЙЛИВОЙ РЕКЛАМЫ (СЛУЧАЙНЫЙ ИНТЕРВАЛ, СЧЕТЧИК СБРАСЫВАЕТСЯ ПРИ ПЕРЕЗАГРУЗКЕ)
+    document.addEventListener("DOMContentLoaded", () => {
+      let closedAdsCount = 0; // Сбрасывается при каждой перезагрузке страницы
 
-    function showSimpleAd() {
-      const closedCount = parseInt(localStorage.getItem('adsClosedCount') || '0', 10);
-      if (closedCount >= 2) return; // Если закрыли 2 раза — больше не показываем
-
-      const randomAd = adList[Math.floor(Math.random() * adList.length)];
-      document.getElementById('simpleAdImg').src = randomAd.img;
-      document.getElementById('simpleAdBtn').href = randomAd.link;
-      
-      const adPopup = document.getElementById('simpleAd');
-      adPopup.style.left = Math.max(10, Math.floor(Math.random() * (window.innerWidth - 330))) + 'px';
-      adPopup.style.top = Math.max(10, Math.floor(Math.random() * (window.innerHeight - 280))) + 'px';
-      adPopup.style.display = 'block';
-    }
-
-    function closeSimpleAd() {
-      document.getElementById('simpleAd').style.display = 'none';
-      
-      let closedCount = parseInt(localStorage.getItem('adsClosedCount') || '0', 10) + 1;
-      localStorage.setItem('adsClosedCount', closedCount);
-
-      if (closedCount < 2) {
-        setTimeout(showSimpleAd, 25000); // Повторный показ через 25 сек, если еще не закрыли дважды
+      // Функция для получения случайного числа в диапазоне (миллисекунды)
+      function getRandomDelay(minSeconds, maxSeconds) {
+        const min = minSeconds * 1000;
+        const max = maxSeconds * 1000;
+        return Math.floor(Math.random() * (max - min + 1)) + min;
       }
-    }
 
-    setTimeout(showSimpleAd, 10000); // Первый показ через 10 секунд
+      // Первая реклама появится через случайное время от 1.5 до 3.5 секунд
+      setTimeout(() => {
+        spawnRetroAd();
+      }, getRandomDelay(1.5, 3.5));
+
+      function spawnRetroAd() {
+        if (closedAdsCount >= 3) return;
+
+        const adEl = document.createElement("div");
+        adEl.className = "retro-ad-popup";
+
+        const maxLeft = window.innerWidth - 340;
+        const maxTop = window.innerHeight - 250;
+        const randomLeft = Math.max(20, Math.floor(Math.random() * maxLeft));
+        const randomTop = Math.max(20, Math.floor(Math.random() * maxTop));
+
+        adEl.style.left = randomLeft + "px";
+        adEl.style.top = randomTop + "px";
+
+        adEl.innerHTML = `
+          <div class="retro-ad-titlebar">
+            <span>Внимание! Срочно!</span>
+            <div class="retro-ad-close" title="Закрыть">X</div>
+          </div>
+          <div class="retro-ad-content">
+            <!-- Замените 'путь_к_вашей_картинке.gif' на вашу графику -->
+            <img src="путь_к_вашей_картинке.gif" alt="Реклама из нулевых">
+            <div class="retro-ad-text">Вы выиграли бесплатные алмазы! Нажмите сюда!</div>
+            <button class="retro-ad-btn" onclick="alert('Поздравляем! Вы кликнули по рекламе из нулевых!')">Участвовать!</button>
+          </div>
+        `;
+
+        document.body.appendChild(adEl);
+
+        const closeBtn = adEl.querySelector(".retro-ad-close");
+        closeBtn.addEventListener("click", () => {
+          adEl.remove();
+          closedAdsCount++;
+
+          if (closedAdsCount < 3) {
+            // Устанавливаем разное случайное время между появлениями (например, от 3 до 7 секунд)
+            const nextDelay = getRandomDelay(3, 7);
+            setTimeout(() => {
+              spawnRetroAd();
+            }, nextDelay);
+          } else {
+            showAdblockNotification();
+          }
+        });
+      }
+
+      function showAdblockNotification() {
+        const note = document.createElement("div");
+        note.className = "adblock-notification";
+        note.innerHTML = `<span>🛡️</span> Мы включили adblock`;
+        document.body.appendChild(note);
+
+        setTimeout(() => {
+          note.remove();
+        }, 4000);
+      }
+    });
   </script>
 </body>
 </html>
