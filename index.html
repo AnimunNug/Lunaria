@@ -41,6 +41,7 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Comfortaa', cursive, sans-serif;
@@ -69,7 +70,6 @@
 
     .container { max-width: 1080px; width: 100%; z-index: 1; display: flex; flex-direction: column; gap: 2.5rem; }
 
-    /* ШАПКА */
     header {
       background: var(--bg-creamy); border: 1px solid var(--card-border); border-radius: 35px;
       padding: 3.5rem 2.5rem; text-align: center; box-shadow: var(--shadow-soft);
@@ -80,13 +80,16 @@
     .left-group, .right-group { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
     .badge-btn {
-      background: var(--primary-soft); color: #fff;
+      background: var(--primary-soft); color: #fff; cursor: pointer;
       padding: 0.7rem 1.4rem; border-radius: 20px; font-size: 0.9rem; font-weight: 700;
       border: none; display: flex; align-items: center; gap: 8px;
       text-decoration: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
+      font-family: inherit;
     }
     .badge-btn:hover { transform: translateY(-3px); background: var(--primary-hover); box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5); color: #fff; }
+    .badge-btn.map-btn { background: var(--accent-color); color: #fff; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); }
+    .badge-btn.map-btn:hover { background: #d97706; box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5); }
     .badge-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
 
     .social-btn, .control-btn {
@@ -95,25 +98,76 @@
       justify-content: center; transition: all 0.3s ease; text-decoration: none; cursor: pointer;
     }
     .social-btn:hover, .control-btn:hover { transform: translateY(-3px); border-color: var(--primary-soft); box-shadow: var(--glow-light); color: var(--primary-soft); }
-    .social-btn svg, .control-btn svg { width: 20px; height: 20px; fill: currentColor; stroke: currentColor; stroke-width: 1.5; }
+    
+    .social-btn svg { width: 22px; height: 22px; fill: currentColor; }
+    .control-btn svg { width: 20px; height: 20px; fill: currentColor; stroke: currentColor; stroke-width: 1.5; }
 
     .logo-container {
       max-width: 180px; width: 100%; margin: 0 auto 1rem auto;
       filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
       animation: floatLogo 4s ease-in-out infinite;
+      cursor: pointer;
+      position: relative;
     }
     @keyframes floatLogo {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-8px); }
     }
-    .logo-container svg { width: 100%; height: auto; display: block; }
-    .logo-container svg path { fill: var(--text-main); transition: fill 0.5s ease; }
+    @keyframes bounceClick {
+      0% { transform: scale(1); }
+      50% { transform: scale(0.85) translateY(-15px); }
+      100% { transform: scale(1); }
+    }
+    .logo-container.clicked { animation: bounceClick 0.4s ease forwards; }
+
+    /* Не кликабельный логотип в режиме Порталии[cite: 12] */
+    .logo-container.portalia-locked {
+      pointer-events: none !important;
+      cursor: default !important;
+    }
+
+    /* Анимация разового переворота логотипа (180 градусов и обратно) */
+    .logo-container.portalia-flip {
+      animation: flipLogoOnce 1.5s ease forwards !important;
+    }
+    @keyframes flipLogoOnce {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(180deg); }
+      100% { transform: translateY(0) rotate(360deg); }
+    }
+
+    /* Переливание логотипа разными цветами во время режима Порталии[cite: 12] */
+    .logo-container.portalia-colors svg path {
+      animation: colorShift 1.5s infinite linear;
+    }
+    @keyframes colorShift {
+      0% { fill: #8b5cf6; }
+      25% { fill: #ec4899; }
+      50% { fill: #38bdf8; }
+      75% { fill: #fbbf24; }
+      100% { fill: #8b5cf6; }
+    }
+
+    .logo-container svg { width: 100%; height: auto; display: block; pointer-events: none; }
+    .logo-container svg path { fill: var(--text-main); transition: fill 0.4s ease; }
 
     .title-main {
       font-family: 'Forum', serif; font-size: 3rem; letter-spacing: 0.04em; margin-bottom: 0.5px;
       background: linear-gradient(135deg, var(--text-main) 30%, var(--primary-soft));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      transition: all 0.5s ease;
     }
+    
+    .portalia-mode {
+      background: linear-gradient(135deg, #8b5cf6 30%, #ec4899);
+      -webkit-background-clip: text;
+      animation: pulseMagic 2s infinite alternate;
+    }
+    @keyframes pulseMagic {
+      0% { text-shadow: 0 0 10px rgba(139, 92, 246, 0.2); transform: scale(1); }
+      100% { text-shadow: 0 0 25px rgba(236, 72, 153, 0.6); transform: scale(1.05); }
+    }
+
     .subtitle { color: var(--primary-soft); font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; }
     
     .metro-badge {
@@ -121,12 +175,13 @@
       background: rgba(239, 68, 68, 0.1); border: 1.5px solid #ef4444; color: #ef4444;
       padding: 0.5rem 1.2rem; border-radius: 20px; font-weight: 700; font-size: 0.9rem;
       margin-bottom: 1.5rem; box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
+      cursor: pointer; transition: all 0.3s;
     }
+    .metro-badge:hover { background: #ef4444; color: #fff; transform: scale(1.05); }
     .metro-badge svg { width: 16px; height: 16px; fill: currentColor; }
-
+    
     .description { color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; max-width: 760px; margin: 0 auto; }
 
-    /* СЕКЦИИ */
     .section-box {
       background: var(--bg-creamy); border: 1px solid var(--card-border); border-radius: 35px;
       padding: 3rem 2.5rem; box-shadow: var(--shadow-soft); backdrop-filter: blur(16px);
@@ -139,231 +194,111 @@
     }
     .section-title svg { width: 28px; height: 28px; stroke: var(--primary-soft); fill: none; stroke-width: 2; }
 
-    /* ПРЕИМУЩЕСТВА ГОРОДА */
     .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
-    .feature-card {
-      background: var(--th-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 1.8rem;
-      text-align: center; transition: all 0.3s ease;
-    }
+    .feature-card { background: var(--th-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 1.8rem; text-align: center; transition: all 0.3s ease; }
     .feature-card:hover { transform: translateY(-5px); border-color: var(--primary-soft); box-shadow: var(--glow-light); }
     .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
     .feature-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--text-main); }
     .feature-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
 
-    /* ЛОР */
     .lore-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; }
     .lore-text p { color: var(--text-muted); line-height: 1.8; font-size: 1.05rem; margin-bottom: 1rem; }
-    .lore-card-visual {
-      background: var(--th-bg); border: 1px solid var(--card-border); border-radius: 25px; padding: 2rem;
-      position: relative; overflow: hidden;
-    }
+    .lore-card-visual { background: var(--th-bg); border: 1px solid var(--card-border); border-radius: 25px; padding: 2rem; position: relative; overflow: hidden; }
     .lore-quote { font-family: 'Forum', serif; font-size: 1.4rem; color: var(--primary-soft); font-style: italic; line-height: 1.5; }
 
-    /* РУКОВОДСТВО */
-    .residents-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 3rem 2rem; margin-top: 3.5rem; }
-    .resident-card {
-      background: var(--th-bg); border: 1px solid var(--card-border); border-radius: 25px;
-      padding: 4.5rem 1.8rem 2rem 1.8rem; text-align: center; transition: all 0.4s ease; position: relative;
-    }
+    .residents-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 3rem 2rem; margin-top: 2rem; }
+    .resident-card { background: var(--th-bg); border: 1px solid var(--card-border); border-radius: 25px; padding: 4.5rem 1.8rem 2rem 1.8rem; text-align: center; transition: all 0.4s ease; position: relative; }
     .resident-card:hover { transform: translateY(-8px); border-color: var(--primary-soft); box-shadow: var(--glow-light); }
-    .resident-avatar-container {
-      position: absolute; top: -85px; left: 50%; transform: translateX(-50%);
-      width: 130px; height: 140px; pointer-events: none;
-    }
+    .resident-avatar-container { position: absolute; top: -85px; left: 50%; transform: translateX(-50%); width: 130px; height: 140px; pointer-events: none; }
     .resident-avatar { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.25)); transition: transform 0.4s ease; }
     .resident-card:hover .resident-avatar { transform: scale(1.1) translateY(-5px); }
     .resident-name { font-weight: 700; font-size: 1.3rem; color: var(--text-main); margin-bottom: 0.3rem; }
     .resident-role { font-size: 0.9rem; font-weight: 600; color: var(--primary-soft); margin-bottom: 0.8rem; }
     .resident-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
 
-    /* ГАЛЕРЕЯ */
     .gallery-container { display: flex; flex-direction: column; gap: 1.8rem; }
     .gallery-filter-tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: thin; }
-    .tab-btn {
-      background: var(--th-bg); border: 1px solid var(--card-border); color: var(--text-main);
-      padding: 0.6rem 1.4rem; border-radius: 18px; font-family: inherit; font-size: 0.9rem; font-weight: 700;
-      white-space: nowrap; transition: all 0.3s ease; cursor: pointer;
-    }
+    .tab-btn { background: var(--th-bg); border: 1px solid var(--card-border); color: var(--text-main); padding: 0.6rem 1.4rem; border-radius: 18px; font-family: inherit; font-size: 0.9rem; font-weight: 700; white-space: nowrap; transition: all 0.3s ease; cursor: pointer; }
     .tab-btn.active, .tab-btn:hover { background: var(--primary-soft); color: #fff; border-color: var(--primary-soft); box-shadow: var(--glow-light); transform: translateY(-2px); }
 
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.2rem; }
-    .gallery-item {
-      position: relative; height: 260px; border-radius: 22px; overflow: hidden; border: 1px solid var(--card-border);
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer;
-    }
+    .gallery-item { position: relative; height: 260px; border-radius: 22px; overflow: hidden; border: 1px solid var(--card-border); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; }
     .gallery-item:hover { transform: translateY(-6px) scale(1.02); border-color: var(--primary-soft); box-shadow: var(--glow-light); }
-    .gallery-bg {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
-      background: linear-gradient(135deg, var(--th-bg), rgba(2, 132, 199, 0.3));
-      transition: transform 0.5s ease;
-    }
+    .gallery-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; background: linear-gradient(135deg, var(--th-bg), rgba(2, 132, 199, 0.3)); transition: transform 0.5s ease; }
     .gallery-item:hover .gallery-bg { transform: scale(1.1); }
-    .gallery-content {
-      position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(to top, rgba(2, 6, 23, 0.9) 0%, rgba(2, 6, 23, 0.3) 50%, transparent 100%);
-      display: flex; flex-direction: column; justify-content: flex-end; padding: 1.2rem; color: #fff;
-    }
-    .gallery-number {
-      position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
-      border: 1px solid rgba(255,255,255,0.2); color: var(--accent-color); font-size: 0.75rem; font-weight: 700;
-      padding: 0.2rem 0.6rem; border-radius: 12px;
-    }
+    .gallery-content { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(2, 6, 23, 0.9) 0%, rgba(2, 6, 23, 0.3) 50%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 1.2rem; color: #fff; }
+    .gallery-number { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.2); color: var(--accent-color); font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 12px; }
     .gallery-title { font-family: 'Forum', serif; letter-spacing: 0.03em; font-size: 1.3rem; margin-bottom: 0.3rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
     .gallery-desc { font-size: 0.85rem; opacity: 0.85; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-    /* ЛАЙТБОКС */
-    .lightbox-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(12px);
-      z-index: 2000; display: flex; align-items: center; justify-content: center;
-      opacity: 0; visibility: hidden; transition: all 0.4s ease; padding: 2rem;
-    }
+    .lightbox-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(12px); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.4s ease; padding: 2rem; }
     .lightbox-overlay.active { opacity: 1; visibility: visible; }
-    .lightbox-container {
-      position: relative; width: 100%; max-width: 1100px; height: 80vh; max-height: 700px;
-      border-radius: 35px; overflow: hidden; border: 1px solid var(--card-border);
-      box-shadow: 0 25px 60px rgba(0,0,0,0.7); transform: scale(0.95); transition: transform 0.4s ease;
-    }
+    .lightbox-container { position: relative; width: 100%; max-width: 1100px; height: 80vh; max-height: 700px; border-radius: 35px; overflow: hidden; border: 1px solid var(--card-border); box-shadow: 0 25px 60px rgba(0,0,0,0.7); transform: scale(0.95); transition: transform 0.4s ease; background: var(--bg-gradient); }
     .lightbox-overlay.active .lightbox-container { transform: scale(1); }
     .lightbox-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
-    .lightbox-gradient {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(to top, rgba(2, 6, 23, 0.95) 0%, rgba(2, 6, 23, 0.4) 50%, transparent 100%);
-      display: flex; flex-direction: column; justify-content: flex-end; padding: 3rem 4rem; color: #fff;
-    }
-    .lightbox-close {
-      position: absolute; top: 20px; right: 20px; width: 45px; height: 45px; border-radius: 50%;
-      background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3); color: #fff;
-      display: flex; align-items: center; justify-content: center; font-size: 1.5rem; z-index: 10; transition: all 0.3s ease; cursor: pointer;
-    }
+    .lightbox-gradient { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(2, 6, 23, 0.95) 0%, rgba(2, 6, 23, 0.4) 50%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 3rem 4rem; color: #fff; pointer-events: none; }
+    .lightbox-gradient > * { pointer-events: auto; }
+    .lightbox-close { position: absolute; top: 20px; right: 20px; width: 45px; height: 45px; border-radius: 50%; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; z-index: 10; transition: all 0.3s ease; cursor: pointer; }
     .lightbox-close:hover { background: var(--primary-soft); transform: rotate(90deg); }
-    .lightbox-nav-btn {
-      position: absolute; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; border-radius: 50%;
-      background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 1.8rem;
-      display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.3s ease; cursor: pointer;
-    }
+    .lightbox-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; border-radius: 50%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.3s ease; cursor: pointer; }
     .lightbox-nav-btn:hover { background: var(--primary-soft); color: #0f172a; }
     .lightbox-prev { left: 20px; }
     .lightbox-next { right: 20px; }
-    .lightbox-badge {
-      display: inline-block; background: var(--primary-soft); color: #fff; font-weight: 700;
-      padding: 0.3rem 0.9rem; border-radius: 12px; font-size: 0.85rem; margin-bottom: 0.8rem; width: max-content;
-    }
+    .lightbox-badge { display: inline-block; background: var(--primary-soft); color: #fff; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 12px; font-size: 0.85rem; margin-bottom: 0.8rem; width: max-content; }
     .lightbox-title { font-family: 'Forum', serif; letter-spacing: 0.03em; font-size: 2.6rem; margin-bottom: 1rem; }
-    .lightbox-desc { font-size: 1.1rem; line-height: 1.7; opacity: 0.9; max-width: 800px; }
+    .lightbox-desc { font-size: 1.1rem; line-height: 1.7; opacity: 0.9; max-width: 800px; margin-bottom: 1.5rem; }
+    .lightbox-actions { display: flex; gap: 15px; z-index: 5; }
+    .lightbox-map-btn { background: var(--accent-color); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 20px; font-family: inherit; font-weight: 700; font-size: 1rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s; }
+    .lightbox-map-btn:hover { background: #d97706; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4); }
 
-    /* СТИЛИ СТИЛИЗОВАННОЙ РЕКЛАМЫ И УВЕДОМЛЕНИЯ В СТИЛЕ 00-Х */
-    .retro-ad-popup {
-      position: fixed;
-      background: #c0c0c0;
-      border: 2px outset #ffffff;
-      box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
-      font-family: "MS Sans Serif", Tahoma, sans-serif;
-      width: 320px;
-      z-index: 9999;
-      user-select: none;
-    }
-    .retro-ad-titlebar {
-      background: linear-gradient(90deg, #000080, #1084d0);
-      color: white;
-      padding: 4px 8px;
-      font-size: 11px;
-      font-weight: bold;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .retro-ad-close {
-      background: #c0c0c0;
-      border: 1px outset #ffffff;
-      color: black;
-      font-weight: bold;
-      width: 16px;
-      height: 16px;
-      font-size: 10px;
-      line-height: 12px;
-      text-align: center;
-      cursor: pointer;
-    }
-    .retro-ad-close:active {
-      border-style: inset;
-    }
-    .retro-ad-content {
-      padding: 12px;
-      text-align: center;
-      background: #ece9d8;
-    }
-    .retro-ad-content img {
-      max-width: 100%;
-      height: auto;
-      border: 1px solid #7f9db9;
-      margin-bottom: 8px;
-    }
-    .retro-ad-text {
-      font-size: 12px;
-      color: #000;
-      margin-bottom: 10px;
-      font-weight: bold;
-    }
-    .retro-ad-btn {
-      background: #dfdfdf;
-      border: 2px outset #ffffff;
-      padding: 4px 12px;
-      font-family: inherit;
-      font-size: 11px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .retro-ad-btn:active {
-      border-style: inset;
-    }
+    .map-inner { position: relative; width: 100%; height: 100%; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: grab; }
+    .map-inner:active { cursor: grabbing; }
+    .map-image-wrapper { position: relative; max-width: 100%; display: inline-block; transition: transform 0.1s ease-out; transform-origin: center center; }
+    .map-image { display: block; max-width: 100%; height: auto; border-radius: 15px; user-select: none; pointer-events: none; }
+    .map-controls-hint { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; pointer-events: none; backdrop-filter: blur(5px); z-index: 100; }
+    
+    .map-pin { position: absolute; width: 30px; height: 30px; background: var(--primary-soft); border: 3px solid #fff; border-radius: 50% 50% 50% 0; transform: translate(-50%, -100%) rotate(-45deg); cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .map-pin:hover { transform: translate(-50%, -100%) rotate(-45deg) scale(1.2); background: var(--accent-color); z-index: 10; }
+    .map-pin.highlight { animation: pinPulse 1.5s infinite; background: var(--accent-color); z-index: 10; }
+    @keyframes pinPulse { 0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); } 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
+    .map-pin-inner { width: 10px; height: 10px; background: #fff; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .map-pin::after { content: attr(data-title); position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%) rotate(45deg); background: rgba(15, 23, 42, 0.9); color: #fff; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-family: 'Comfortaa', sans-serif; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.3s; }
+    .map-pin:hover::after { opacity: 1; transform: translateX(-50%) rotate(45deg); }
 
-    /* Уведомление об adblock (более заметное, с исчезновением) */
-    .adblock-notification {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      background: #ffffe0;
-      border: 2px outset #ffffff;
-      outline: 2px solid #cc0000;
-      padding: 14px 20px;
-      font-family: "MS Sans Serif", Tahoma, sans-serif;
-      font-size: 13px;
-      font-weight: bold;
-      color: #cc0000;
-      box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
-      z-index: 9998;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      animation: fadeInOut 4s ease forwards;
-    }
+    .retro-ad-popup { position: fixed; background: #c0c0c0; border: 2px outset #ffffff; box-shadow: 4px 4px 10px rgba(0,0,0,0.5); font-family: "MS Sans Serif", Tahoma, sans-serif; width: 320px; z-index: 9999; user-select: none; }
+    .retro-ad-titlebar { background: linear-gradient(90deg, #000080, #1084d0); color: white; padding: 4px 8px; font-size: 11px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+    .retro-ad-close { background: #c0c0c0; border: 1px outset #ffffff; color: black; font-weight: bold; width: 16px; height: 16px; font-size: 10px; line-height: 12px; text-align: center; cursor: pointer; }
+    .retro-ad-close:active { border-style: inset; }
+    .retro-ad-content { padding: 12px; text-align: center; background: #ece9d8; }
+    .retro-ad-content img { max-width: 100%; height: auto; border: 1px solid #7f9db9; margin-bottom: 8px; }
+    .retro-ad-text { font-size: 12px; color: #000; margin-bottom: 10px; font-weight: bold; }
+    .retro-ad-btn { background: #dfdfdf; border: 2px outset #ffffff; padding: 4px 12px; font-family: inherit; font-size: 11px; font-weight: bold; cursor: pointer; }
+    .retro-ad-btn:active { border-style: inset; }
+    .adblock-notification { position: fixed; bottom: 25px; right: 25px; background: #ffffe0; border: 2px outset #ffffff; outline: 2px solid #cc0000; padding: 14px 20px; font-family: "MS Sans Serif", Tahoma, sans-serif; font-size: 13px; font-weight: bold; color: #cc0000; box-shadow: 5px 5px 15px rgba(0,0,0,0.4); z-index: 9998; display: flex; align-items: center; gap: 12px; animation: fadeInOut 4s ease forwards; }
+    @keyframes fadeInOut { 0% { opacity: 0; transform: translateY(20px); } 15% { opacity: 1; transform: translateY(0); } 85% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(20px); pointer-events: none; } }
 
-    @keyframes fadeInOut {
-      0% { opacity: 0; transform: translateY(20px); }
-      15% { opacity: 1; transform: translateY(0); }
-      85% { opacity: 1; transform: translateY(0); }
-      100% { opacity: 0; transform: translateY(20px); pointer-events: none; }
-    }
-
-    /* БАННЕР ПЕРЕЕЗДА */
-    .relocate-banner {
-      background: linear-gradient(135deg, rgba(2, 132, 199, 0.15), rgba(245, 158, 11, 0.15));
-      border: 2px dashed var(--primary-soft); border-radius: 35px; padding: 3.5rem 2rem; text-align: center;
-      box-shadow: var(--shadow-soft);
-    }
+    .relocate-banner { background: linear-gradient(135deg, rgba(2, 132, 199, 0.15), rgba(245, 158, 11, 0.15)); border: 2px dashed var(--primary-soft); border-radius: 35px; padding: 3.5rem 2rem; text-align: center; box-shadow: var(--shadow-soft); transition: all 0.5s ease; scroll-margin-top: 100px; }
+    .relocate-banner.highlight-mode { border-color: var(--accent-color); box-shadow: 0 0 30px rgba(245, 158, 11, 0.3); transform: scale(1.02); }
     .relocate-banner h2 { font-family: 'Forum', serif; letter-spacing: 0.05em; font-size: 2.6rem; color: var(--text-main); margin-bottom: 1rem; }
     .relocate-banner p { color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; max-width: 650px; margin: 0 auto 2rem auto; }
-    .relocate-btn {
-      background: var(--primary-soft); color: #fff;
-      padding: 1rem 2.5rem; border-radius: 25px; font-size: 1.1rem; font-weight: 700;
-      border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
-      transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4); cursor: pointer;
-    }
+    .relocate-btn { background: var(--primary-soft); color: #fff; padding: 1rem 2.5rem; border-radius: 25px; font-size: 1.1rem; font-weight: 700; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4); cursor: pointer; }
     .relocate-btn:hover { transform: translateY(-4px) scale(1.05); background: var(--primary-hover); box-shadow: 0 8px 25px rgba(2, 132, 199, 0.6); color: #fff; }
+
+    .morph-scroll-btn {
+      position: fixed; bottom: 30px; left: 30px; width: 60px; height: 60px; border-radius: 50%;
+      background: var(--accent-color); color: #fff; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4); cursor: pointer; z-index: 1000;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0; visibility: hidden; transform: translateY(20px);
+    }
+    .morph-scroll-btn.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+    .morph-scroll-btn:hover { background: #d97706; transform: translateY(-5px) scale(1.1); }
+    .morph-scroll-btn.morphed { transform: scale(0.1) translateY(100px); opacity: 0; }
+    .morph-scroll-btn svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2; fill: none; }
 
     footer { text-align: center; color: var(--text-muted); font-size: 0.95rem; display: flex; flex-direction: column; gap: 6px; padding-top: 1rem; }
     .creators-tag { font-weight: 700; color: var(--primary-soft); }
+    .developer-tag { font-size: 0.8rem; margin-top: 10px; opacity: 0.7; }
 
     @media (max-width: 768px) {
       .lore-grid { grid-template-columns: 1fr; }
@@ -373,23 +308,29 @@
       .lightbox-container { height: 90vh; }
       .lightbox-gradient { padding: 1.5rem; }
       .lightbox-title { font-size: 2rem; }
+      .morph-scroll-btn { left: 20px; bottom: 20px; width: 50px; height: 50px; }
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <!-- ШАПКА -->
     <header>
       <div class="top-bar">
         <div class="left-group">
           <a href="https://animunnug.github.io/LunariaRP/" target="_blank" class="badge-btn">
             <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            <span>Скачать ресурспак</span>
+            <span>Ресурспак</span>
           </a>
+          <button class="badge-btn map-btn" onclick="openMapLightbox()">
+            <svg viewBox="0 0 24 24"><path d="M3 6l6-3 6 3 6-3v12l-6 3-6-3-6 3V6z"/><line x1="9" y1="3" x2="9" y2="15"/><line x1="15" y1="6" x2="15" y2="18"/></svg>
+            <span>Карта города</span>
+          </button>
           
           <a href="https://discord.gg/ВАШ_СЕРВЕР" class="social-btn" target="_blank" title="Discord сервер">
-            <svg viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.077.077 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36">
+              <path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.63-27.29-4.5-51.05-19.45-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5.18-12.72,11.45-12.72S53.9,46,53.88,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.72,11.45-12.72S96.15,46,96.13,53,91,65.69,84.69,65.69Z"/>
+            </svg>
           </a>
         </div>
         
@@ -400,7 +341,7 @@
         </div>
       </div>
       
-      <div class="logo-container">
+      <div class="logo-container" id="mainLogo" onclick="animateLogo(this)">
         <svg viewBox="0 0 826 710" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path fill-rule="evenodd" clip-rule="evenodd" d="M533.234 296.952L529.363 289.051C530.699 291.661 531.989 294.296 533.234 296.952Z" />
           <path fill-rule="evenodd" clip-rule="evenodd" d="M533.234 296.952L529.363 289.051C526.201 282.597 518.212 280.205 512.024 283.858L318.361 398.199C283.57 418.837 237.04 416.311 217.289 380.493C152.962 263.832 247.601 109.414 363.39 41.0886C373.02 35.4063 382.841 30.3735 392.807 25.9767C405.876 20.2112 404.737 -0.0395354 390.503 5.79775e-05C333.623 0.158281 278.627 18.5949 226.248 49.5032C62.6083 146.065 6.52277 359.907 100.952 527.168C100.952 527.168 86.9019 549.721 58.4086 553.986C52.1254 554.926 43.5774 555.21 34.0828 555.081C10.8512 554.764 -4.98115 578.023 1.43635 597.741C3.66275 604.582 12.0712 605.75 18.2604 602.083L396.864 377.754C404.279 373.36 413.771 376.232 415.652 384.643C417.055 390.917 417.477 395.866 417.477 395.866C417.592 397.214 417.716 398.659 417.859 400.226C419.139 414.236 417.738 428.432 413.738 441.973C409.738 455.513 403.22 468.123 394.57 479.057C385.92 489.99 375.313 499.024 363.379 505.625C351.445 512.225 338.424 516.258 325.089 517.484C311.754 518.71 298.375 517.105 285.743 512.762C268.538 506.848 249.065 504.826 233.485 514.22L165.349 555.304C147.865 565.846 143.426 589.501 158.386 603.394C182.165 625.474 209.996 642.207 240.231 652.6C270.467 662.994 302.494 666.837 334.415 663.903C366.336 660.968 397.502 651.314 426.07 635.515C454.637 619.714 480.026 598.089 500.731 571.918C521.437 545.746 537.039 515.561 546.615 483.149C556.191 450.737 559.546 416.756 556.481 383.219C553.728 353.092 545.843 323.873 533.234 296.952Z" />
@@ -408,18 +349,17 @@
         </svg>
       </div>
 
-      <h1 class="title-main">ЛУНАРИЯ</h1>
-      <p class="subtitle">Столичный город магии, света и историй</p>
+      <h1 class="title-main" id="mainTitle">ЛУНАРИЯ</h1>
+      <p class="subtitle" id="mainSubtitle">Столичный город магии, света и историй</p>
       
-      <div class="metro-badge">
+      <div class="metro-badge" onclick="copyPortalCoordinates()">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
-        <span>Красная ветка, 1145</span>
+        <span id="metroBadgeText">Красная ветка, 1145</span>
       </div>
 
-      <p class="description">Сердце нашего мира, раскинувшееся вблизи ключевых путей сообщения. Место, где переплетаются древние тайны, амбициозные проекты архитекторов и уютная атмосфера живого сообщества.</p>
+      <p class="description" id="mainDescription">Сердце нашего мира, раскинувшееся вблизи ключевых путей сообщения. Место, где переплетаются древние тайны, амбициозные проекты архитекторов и уютная атмосфера живого сообщества.</p>
     </header>
 
-    <!-- ПОЧЕМУ СТОИТ ЖИТЬ В ЛУНАРИИ -->
     <div class="section-box">
       <h2 class="section-title">
         <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
@@ -429,7 +369,7 @@
         <div class="feature-card">
           <span class="feature-icon">✨</span>
           <div class="feature-title">Топовый дизайн всего</div>
-          <div class="feature-desc">Уникальный стиль построек, гармонично вписанный в ландшафт с кастомным ресурспаком.</div>
+          <div class="feature-desc">Уникальный стиль построек, гармонично вписанный в ландшафт с кастомным ресурспаком и ванильными 3D-моделями.</div>
         </div>
         <div class="feature-card">
           <span class="feature-icon">😎</span>
@@ -444,7 +384,6 @@
       </div>
     </div>
 
-    <!-- ЛОР -->
     <div class="section-box">
       <h2 class="section-title">
         <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
@@ -461,12 +400,7 @@
       </div>
     </div>
 
-    <!-- РУКОВОДСТВО -->
     <div class="section-box">
-      <h2 class="section-title">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Руководство Лунарии
-      </h2>
       <div class="residents-grid">
         <div class="resident-card">
           <div class="resident-avatar-container">
@@ -487,7 +421,6 @@
       </div>
     </div>
 
-    <!-- ГАЛЕРЕЯ -->
     <div class="section-box">
       <h2 class="section-title">
         <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -496,40 +429,18 @@
 
       <div class="gallery-container">
         <div class="gallery-filter-tabs">
-          <button class="tab-btn active" onclick="filterGallery('all', event)">Все места (20)</button>
+          <button class="tab-btn active" onclick="filterGallery('all', event)">Все места</button>
           <button class="tab-btn" onclick="filterGallery('architecture', event)">Архитектура</button>
           <button class="tab-btn" onclick="filterGallery('infrastructure', event)">Инфраструктура</button>
           <button class="tab-btn" onclick="filterGallery('shops', event)">Торговые точки</button>
           <button class="tab-btn" onclick="filterGallery('nature', event)">Природа</button>
         </div>
 
-        <div class="gallery-grid" id="galleryGrid">
-          <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(0)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#01</span><div class="gallery-title">Центральная Библиотека</div><div class="gallery-desc">Хранилище древних фолиантов и чертежей.</div></div></div>
-          <div class="gallery-item" data-category="infrastructure" onclick="openLightboxByIndex(1)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#02</span><div class="gallery-title">Портал (Красная ветка, 1145)</div><div class="gallery-desc">Главный вход в наш город с внешних дорог.</div></div></div>
-          <div class="gallery-item" data-category="nature" onclick="openLightboxByIndex(2)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#03</span><div class="gallery-title">Лунная площадь</div><div class="gallery-desc">Просторная зона отдыха с монументом.</div></div></div>
-          <div class="gallery-item" data-category="shops" onclick="openLightboxByIndex(3)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#04</span><div class="gallery-title">Рынок «У Мэра»</div><div class="gallery-desc">Главный торговый базар столицы.</div></div></div>
-          <div class="gallery-item" data-category="shops" onclick="openLightboxByIndex(4)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#05</span><div class="gallery-title">Лавка Томмоми</div><div class="gallery-desc">Эксклюзивные строительные материалы.</div></div></div>
-          <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(5)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#06</span><div class="gallery-title">Резиденция Мэра</div><div class="gallery-desc">Официальный дом градоначальника Moonray.</div></div></div>
-          <div class="gallery-item" data-category="nature" onclick="openLightboxByIndex(6)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#07</span><div class="gallery-title">Сад Звездного Света</div><div class="gallery-desc">Ботанический парк с редкими растениями.</div></div></div>
-          <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(7)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#08</span><div class="gallery-title">Башня Магов</div><div class="gallery-desc">Изучение магических артефактов.</div></div></div>
-          <div class="gallery-item" data-category="infrastructure" onclick="openLightboxByIndex(8)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#09</span><div class="gallery-title">Портал измерений</div><div class="gallery-desc">Стабильный переход в дальние миры.</div></div></div>
-          <div class="gallery-item" data-category="nature" onclick="openLightboxByIndex(9)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#10</span><div class="gallery-title">Набережная Сияния</div><div class="gallery-desc">Живописный берег городского озера.</div></div></div>
-          <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(10)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#11</span><div class="gallery-title">Музей Истории</div><div class="gallery-desc">Летопись и важнейшие вехи развития.</div></div></div>
-          <div class="gallery-item" data-category="shops" onclick="openLightboxByIndex(11)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#12</span><div class="gallery-title">Аукционный дом</div><div class="gallery-desc">Торги за ценнейшие артефакты.</div></div></div>
-          <div class="gallery-item" data-category="nature" onclick="openLightboxByIndex(12)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#13</span><div class="gallery-title">Парк Весны</div><div class="gallery-desc">Тихое место для отдыха.</div></div></div>
-          <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(13)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#14</span><div class="gallery-title">Таверна «Счастливый странник»</div><div class="gallery-desc">Теплая атмосфера и серверные байки.</div></div></div>
-          <div class="gallery-item" data-category="infrastructure" onclick="openLightboxByIndex(14)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#15</span><div class="gallery-title">Сторожевая вышка</div><div class="gallery-desc">Высотный дозорный пункт.</div></div></div>
-          <div class="gallery-item" data-category="shops" onclick="openLightboxByIndex(15)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#16</span><div class="gallery-title">Ряды «Самоцвет»</div><div class="gallery-desc">Частные магазинчики местных жителей.</div></div></div>
-          <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(16)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#17</span><div class="gallery-title">Театр Искусств</div><div class="gallery-desc">Сцена для проведения праздников.</div></div></div>
-          <div class="gallery-item" data-category="infrastructure" onclick="openLightboxByIndex(17)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#18</span><div class="gallery-title">Банк Лунарии</div><div class="gallery-desc">Надежное хранилище ценностей.</div></div></div>
-          <div class="gallery-item" data-category="nature" onclick="openLightboxByIndex(18)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#19</span><div class="gallery-title">Лунный пруд</div><div class="gallery-desc">Водоем с отражением звезд.</div></div></div>
-          <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(19)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#20</span><div class="gallery-title">Зал Славы</div><div class="gallery-desc">Память о великих жителях столицы.</div></div></div>
-        </div>
+        <div class="gallery-grid" id="galleryGrid"></div>
       </div>
     </div>
 
-    <!-- БАННЕР ПЕРЕЕЗДА -->
-    <div class="relocate-banner">
+    <div class="relocate-banner" id="targetRelocateBlock">
       <h2>Стань частью нашей истории!</h2>
       <p>Лунария открывает свои двери для новых жителей, амбициозных строителей и искателей приключений. Прибывайте через портал на Красной ветке (1145) или залетайте в наш Discord!</p>
       <a href="https://discord.gg/ВАШ_СЕРВЕР" target="_blank" class="relocate-btn">
@@ -541,10 +452,14 @@
     <footer>
       <p>✨ С любовью из Лунарии | SPm Server</p>
       <p class="creators-tag">Столичный портал города</p>
+      <p class="developer-tag">Связь с разработчиком: animun_second (Discord)</p>
     </footer>
   </div>
 
-  <!-- ЛАЙТБОКС -->
+  <div id="morphScrollBtn" class="morph-scroll-btn" onclick="scrollToBottom()" title="Вниз сайта">
+    <svg viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+  </div>
+
   <div id="lightboxOverlay" class="lightbox-overlay" onclick="closeLightbox(event)">
     <div class="lightbox-container">
       <button class="lightbox-nav-btn lightbox-prev" onclick="changeLightboxSlide(-1, event)">&#10094;</button>
@@ -555,11 +470,97 @@
         <div id="lightboxBadge" class="lightbox-badge">Категория</div>
         <h2 id="lightboxTitle" class="lightbox-title">Заголовок</h2>
         <p id="lightboxDesc" class="lightbox-desc">Описание места...</p>
+        <div class="lightbox-actions">
+          <button class="lightbox-map-btn" onclick="openMapFromLightbox(event)">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Показать на карте
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="mapLightboxOverlay" class="lightbox-overlay" onclick="closeMapLightbox(event)">
+    <div class="lightbox-container" style="background: var(--th-bg);">
+      <button class="lightbox-close" onclick="forceCloseMapLightbox()">×</button>
+      <div class="map-inner" id="mapModalContainer">
+        <div class="map-controls-hint">💡 Зум: колесико мыши | Перемещение: зажать и тянуть</div>
+        <div class="map-image-wrapper" id="mapImageWrapper">
+          <img src="путь_к_карте_города.png" alt="Карта Лунарии" class="map-image" id="cityMapImage">
+          <div id="mapMarkersContainer"></div>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
+    const logoColors = ['#0284c7', '#f59e0b', '#ef4444', '#10b981', '#8b5cf6'];
+    let logoClicks = 0;
+
+    function animateLogo(el) {
+      el.classList.remove('clicked');
+      void el.offsetWidth;
+      el.classList.add('clicked');
+      
+      logoClicks++;
+      if (logoClicks === 67) {
+        triggerPortaliaEasterEgg();
+        logoClicks = 0;
+      } else {
+        const randomColor = logoColors[Math.floor(Math.random() * logoColors.length)];
+        el.querySelectorAll('path').forEach(p => p.style.fill = randomColor);
+      }
+    }
+
+    function triggerPortaliaEasterEgg() {
+      const logoEl = document.getElementById('mainLogo');
+      
+      // Фиксация темы (тема сайта больше не меняется автоматически)[cite: 12]
+      document.getElementById('mainTitle').innerText = "ПОРТАЛИЯ";
+      document.getElementById('mainTitle').classList.add('portalia-mode');
+      document.getElementById('mainSubtitle').innerText = "Секретное измерение магии и квантовых аномалий";
+      
+      document.getElementById('metroBadgeText').innerText = "бля. она точно будет...когда нибудь";
+
+      document.getElementById('mainDescription').innerText = "Вы активировали скрытый резонанс Порталии! Добро пожаловать в изнанку мира, где законы пространства и времени подчиняются чистой энергии порталов.";
+      
+      // Логотип становится не кликабельным, переворачивается один раз и переливается разными цветами[cite: 12]
+      logoEl.classList.add('portalia-locked');
+      logoEl.classList.add('portalia-flip');
+      logoEl.classList.add('portalia-colors');
+
+      const notif = document.createElement("div");
+      notif.className = "adblock-notification";
+      notif.style.outlineColor = "#8b5cf6";
+      notif.style.color = "#8b5cf6";
+      notif.innerHTML = `<span>🌌</span> Режим «Порталия» активирован!`;
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 4000);
+
+      // Таймер ровно на 15 секунд для возвращения логотипа в исходное положение[cite: 12]
+      setTimeout(() => {
+        document.getElementById('mainTitle').innerText = "ЛУНАРИЯ";
+        document.getElementById('mainTitle').classList.remove('portalia-mode');
+        document.getElementById('mainSubtitle').innerText = "Столичный город магии, света и историй";
+        document.getElementById('metroBadgeText').innerText = "Красная ветка, 1145";
+        document.getElementById('mainDescription').innerText = "Сердце нашего мира, раскинувшееся вблизи ключевых путей сообщения. Место, где переплетаются древние тайны, амбициозные проекты архитекторов и уютная атмосфера живого сообщества.";
+
+        // Снимаем блокировку, убираем классы анимаций и возвращаем стандартный цвет путей
+        logoEl.classList.remove('portalia-locked');
+        logoEl.classList.remove('portalia-flip');
+        logoEl.classList.remove('portalia-colors');
+        logoEl.querySelectorAll('path').forEach(p => p.style.fill = 'var(--text-main)');
+
+        const endNotif = document.createElement("div");
+        endNotif.className = "adblock-notification";
+        endNotif.style.outlineColor = "#0284c7";
+        endNotif.style.color = "#0284c7";
+        endNotif.innerHTML = `<span>✨</span> Режим «Порталия» завершён.`;
+        document.body.appendChild(endNotif);
+        setTimeout(() => endNotif.remove(), 4000);
+      }, 15000);
+    }
+
     function toggleTheme() {
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
       const newTheme = isDark ? 'light' : 'dark';
@@ -567,7 +568,46 @@
       themeIcon.innerHTML = newTheme === 'dark' 
         ? `<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>` 
         : `<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>`;
+      
       document.documentElement.setAttribute('data-theme', newTheme);
+      document.getElementById('mainLogo').querySelectorAll('path').forEach(p => p.style.fill = 'var(--text-main)');
+    }
+
+    function copyPortalCoordinates() {
+      const currentCoords = document.getElementById('metroBadgeText').innerText;
+      navigator.clipboard.writeText(currentCoords);
+      const notif = document.createElement("div");
+      notif.className = "adblock-notification";
+      notif.innerHTML = `<span>📋</span> Скопировано в буфер обмена!`;
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 3000);
+    }
+
+    const tourData = [
+      { title: "Центральная Библиотека", desc: "Хранилище древних фолиантов, секретов кастомных текстур и чертежей построек.", category: "architecture", catName: "Архитектура", img: "", mapX: 400, mapY: 200 },
+      { title: "Портал (Красная ветка, 1145)", desc: "Точка входа в Лунарию с общей транспортной системы.", category: "infrastructure", catName: "Инфраструктура", img: "", mapX: 150, mapY: 450 },
+      { title: "Лунная площадь", desc: "Просторная зона отдыха с величественным монументом и уютными лавочками.", category: "nature", catName: "Природа", img: "", mapX: 400, mapY: 300 },
+      { title: "Рынок «У Мэра»", desc: "Центральная торговая точка, где жители обмениваются ресурсами.", category: "shops", catName: "Торговые точки", img: "", mapX: 320, mapY: 280 },
+      { title: "Лавка Томмоми", desc: "Магазин эксклюзивных строительных материалов.", category: "shops", catName: "Торговые точки", img: "", mapX: 360, mapY: 250 },
+      { title: "Резиденция Мэра", desc: "Официальный дом градоначальника Moonray.", category: "architecture", catName: "Архитектура", img: "", mapX: 500, mapY: 180 }
+    ];
+
+    function renderGallery() {
+      const grid = document.getElementById('galleryGrid');
+      grid.innerHTML = '';
+      tourData.forEach((item, index) => {
+        const num = (index + 1).toString().padStart(2, '0');
+        grid.innerHTML += `
+          <div class="gallery-item" data-category="${item.category}" onclick="openLightboxByIndex(${index})">
+            <img class="gallery-bg" src="${item.img}" alt="">
+            <div class="gallery-content">
+              <span class="gallery-number">#${num}</span>
+              <div class="gallery-title">${item.title}</div>
+              <div class="gallery-desc">${item.desc}</div>
+            </div>
+          </div>
+        `;
+      });
     }
 
     function filterGallery(category, event) {
@@ -578,33 +618,11 @@
       });
     }
 
-    const tourData = [
-      { title: "Центральная Библиотека", desc: "Хранилище древних фолиантов, секретов кастомных текстур и чертежей построек.", category: "Архитектура", img: "" },
-      { title: "Портал (Красная ветка, 1145)", desc: "Точка входа в Лунарию с общей транспортной системы.", category: "Инфраструктура", img: "" },
-      { title: "Лунная площадь", desc: "Просторная зона отдыха с величественным монументом и уютными лавочками.", category: "Природа", img: "" },
-      { title: "Рынок «У Мэра»", desc: "Центральная торговая точка, где жители обмениваются ресурсами.", category: "Торговые точки", img: "" },
-      { title: "Лавка редких блоков Томмоми", desc: "Магазин эксклюзивных строительных материалов.", category: "Торговые точки", img: "" },
-      { title: "Резиденция Мэра", desc: "Официальный дом градоначальника Moonray.", category: "Архитектура", img: "" },
-      { title: "Сад Звездного Света", desc: "Ботанический парк с редкими светящимися растениями.", category: "Природа", img: "" },
-      { title: "Башня Магов", desc: "Место изучения магических артефактов.", category: "Архитектура", img: "" },
-      { title: "Портал измерений", desc: "Стабильный переход в дальние миры сервера.", category: "Инфраструктура", img: "" },
-      { title: "Набережная Сияния", desc: "Живописный берег городского озера.", category: "Природа", img: "" },
-      { title: "Музей Истории", desc: "Летопись и важнейшие вехи развития города.", category: "Архитектура", img: "" },
-      { title: "Аукционный дом", desc: "Место проведения торгов за ценнейшие артефакты.", category: "Торговые точки", img: "" },
-      { title: "Парк Весны", desc: "Тихое место для отдыха под кронами деревьев.", category: "Природа", img: "" },
-      { title: "Таверна «Счастливый странник»", desc: "Теплая атмосфера и серверные байки.", category: "Архитектура", img: "" },
-      { title: "Сторожевая вышка", desc: "Высотный дозорный пункт внешней границы.", category: "Инфраструктура", img: "" },
-      { title: "Торговые ряды «Самоцвет»", desc: "Небольшие частные магазинчики жителей.", category: "Торговые точки", img: "" },
-      { title: "Театр Искусств", desc: "Сцена для проведения праздников.", category: "Архитектура", img: "" },
-      { title: "Банк Лунарии", desc: "Надежное хранилище ценностей.", category: "Инфраструктура", img: "" },
-      { title: "Лунный пруд", desc: "Водоем с отражением звезд.", category: "Природа", img: "" },
-      { title: "Зал Славы", desc: "Память о великих жителях и героях.", category: "Архитектура", img: "" }
-    ];
-
     let currentTourIndex = 0;
     function openLightboxByIndex(index) {
       currentTourIndex = index;
       updateLightboxContent();
+      forceCloseMapLightbox();
       document.getElementById('lightboxOverlay').classList.add('active');
     }
     function updateLightboxContent() {
@@ -612,7 +630,7 @@
       document.getElementById('lightboxImg').src = item.img;
       document.getElementById('lightboxTitle').innerText = item.title;
       document.getElementById('lightboxDesc').innerText = item.desc;
-      document.getElementById('lightboxBadge').innerText = item.category;
+      document.getElementById('lightboxBadge').innerText = item.catName;
     }
     function changeLightboxSlide(direction, event) {
       if (event) event.stopPropagation();
@@ -622,46 +640,152 @@
     function closeLightbox(e) { if (e.target.id === 'lightboxOverlay') forceCloseLightbox(); }
     function forceCloseLightbox() { document.getElementById('lightboxOverlay').classList.remove('active'); }
 
-    // ЛОГИКА НАЗОЙЛИВОЙ РЕКЛАМЫ (СЛУЧАЙНЫЙ ИНТЕРВАЛ, СЧЕТЧИК СБРАСЫВАЕТСЯ ПРИ ПЕРЕЗАГРУЗКЕ)
-    document.addEventListener("DOMContentLoaded", () => {
-      let closedAdsCount = 0; // Сбрасывается при каждой перезагрузке страницы
+    let mapScale = 1;
+    let mapPosX = 0;
+    let mapPosY = 0;
+    let isDraggingMap = false;
+    let startDragX = 0;
+    let startDragY = 0;
 
-      // Функция для получения случайного числа в диапазоне (миллисекунды)
+    function initInteractiveMap() {
+      const container = document.getElementById('mapModalContainer');
+      const wrapper = document.getElementById('mapImageWrapper');
+
+      container.onmousedown = (e) => {
+        if(e.target.closest('.map-pin')) return;
+        isDraggingMap = true;
+        startDragX = e.clientX - mapPosX;
+        startDragY = e.clientY - mapPosY;
+      };
+
+      window.onmousemove = (e) => {
+        if (!isDraggingMap) return;
+        mapPosX = e.clientX - startDragX;
+        mapPosY = e.clientY - startDragY;
+        updateMapTransform();
+      };
+
+      window.onmouseup = () => { isDraggingMap = false; };
+
+      container.onwheel = (e) => {
+        e.preventDefault();
+        const zoomStep = 0.15;
+        if (e.deltaY < 0) {
+          mapScale = Math.min(mapScale + zoomStep, 3);
+        } else {
+          mapScale = Math.max(mapScale - zoomStep, 0.5);
+        }
+        updateMapTransform();
+      };
+    }
+
+    function updateMapTransform() {
+      const wrapper = document.getElementById('mapImageWrapper');
+      wrapper.style.transform = `translate(${mapPosX}px, ${mapPosY}px) scale(${mapScale})`;
+    }
+
+    function renderMapMarkers() {
+      const container = document.getElementById('mapMarkersContainer');
+      container.innerHTML = '';
+      tourData.forEach((item, index) => {
+        if(item.mapX !== undefined && item.mapY !== undefined) {
+          const pin = document.createElement('div');
+          pin.className = 'map-pin';
+          pin.style.left = item.mapX + 'px';
+          pin.style.top = item.mapY + 'px';
+          pin.setAttribute('data-title', item.title);
+          pin.innerHTML = '<div class="map-pin-inner"></div>';
+          pin.onclick = (e) => {
+            e.stopPropagation();
+            openLightboxByIndex(index);
+          };
+          container.appendChild(pin);
+        }
+      });
+    }
+
+    function openMapLightbox(highlightIndex = -1) {
+      forceCloseLightbox();
+      renderMapMarkers();
+      mapScale = 1; mapPosX = 0; mapPosY = 0;
+      updateMapTransform();
+      
+      if(highlightIndex !== -1) {
+        const pins = document.querySelectorAll('.map-pin');
+        if(pins[highlightIndex]) pins[highlightIndex].classList.add('highlight');
+      }
+      document.getElementById('mapLightboxOverlay').classList.add('active');
+    }
+
+    function openMapFromLightbox(event) {
+      event.stopPropagation();
+      openMapLightbox(currentTourIndex);
+    }
+
+    function closeMapLightbox(e) { if (e.target.id === 'mapLightboxOverlay') forceCloseMapLightbox(); }
+    function forceCloseMapLightbox() { document.getElementById('mapLightboxOverlay').classList.remove('active'); }
+
+    function scrollToBottom() {
+      const targetBlock = document.getElementById('targetRelocateBlock');
+      const btn = document.getElementById('morphScrollBtn');
+      
+      btn.classList.add('morphed');
+      targetBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      targetBlock.classList.add('highlight-mode');
+      
+      setTimeout(() => {
+        targetBlock.classList.remove('highlight-mode');
+        btn.classList.remove('morphed');
+      }, 1000);
+    }
+
+    window.addEventListener('scroll', () => {
+      const btn = document.getElementById('morphScrollBtn');
+      if (window.scrollY > 300) {
+        btn.classList.add('visible');
+      } else {
+        btn.classList.remove('visible');
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderGallery();
+      initInteractiveMap();
+
+      let closedAdsCount = 0; 
+      const adVariations = [
+        { img: "images/ad/tuntun.gif", title: "Внимание! Срочно!", text: "ВЫ ВЫЙГРАЛИ ТУН ТУН ТУН! Нажмите сюда!", btnText: "Получить!" },
+        { img: "images/ad/diamond.gif", title: "Системное сообщение", text: "Найден баг на алмазы! Успей использовать до фикса!", btnText: "Узнать координаты" },
+        { img: "images/ad/admin.gif", title: "Поздравляем!", text: "Вы стали 1 000 000 посетителем! Заберите админку!", btnText: "Скачать" }
+      ];
+
       function getRandomDelay(minSeconds, maxSeconds) {
-        const min = minSeconds * 1000;
-        const max = maxSeconds * 1000;
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        return Math.floor(Math.random() * ((maxSeconds - minSeconds) * 1000 + 1)) + (minSeconds * 1000);
       }
 
-      // Первая реклама появится через случайное время от 1.5 до 3.5 секунд
-      setTimeout(() => {
-        spawnRetroAd();
-      }, getRandomDelay(1.5, 3.5));
+      setTimeout(() => spawnRetroAd(), getRandomDelay(1.5, 3.5));
 
       function spawnRetroAd() {
         if (closedAdsCount >= 3) return;
 
+        const randomAd = adVariations[Math.floor(Math.random() * adVariations.length)];
         const adEl = document.createElement("div");
         adEl.className = "retro-ad-popup";
 
         const maxLeft = window.innerWidth - 340;
         const maxTop = window.innerHeight - 250;
-        const randomLeft = Math.max(20, Math.floor(Math.random() * maxLeft));
-        const randomTop = Math.max(20, Math.floor(Math.random() * maxTop));
-
-        adEl.style.left = randomLeft + "px";
-        adEl.style.top = randomTop + "px";
+        adEl.style.left = Math.max(20, Math.floor(Math.random() * maxLeft)) + "px";
+        adEl.style.top = Math.max(20, Math.floor(Math.random() * maxTop)) + "px";
 
         adEl.innerHTML = `
           <div class="retro-ad-titlebar">
-            <span>Внимание! Срочно!</span>
+            <span>${randomAd.title}</span>
             <div class="retro-ad-close" title="Закрыть">X</div>
           </div>
           <div class="retro-ad-content">
-            <!-- Замените 'путь_к_вашей_картинке.gif' на вашу графику -->
-            <img src="images/ad/tuntun.gif" alt="Реклама из нулевых">
-            <div class="retro-ad-text">ВЫ ВЫЙГРАЛИ ТУН ТУН ТУН! Нажмите сюда!</div>
-            <button class="retro-ad-btn" onclick="alert('Поздравляем! Вы кликнули по рекламе из нулевых!')">Получить!</button>
+            <img src="${randomAd.img}" alt="Реклама из нулевых">
+            <div class="retro-ad-text">${randomAd.text}</div>
+            <button class="retro-ad-btn" onclick="alert('Поздравляем! Вы кликнули по рекламе из нулевых!')">${randomAd.btnText}</button>
           </div>
         `;
 
@@ -671,13 +795,8 @@
         closeBtn.addEventListener("click", () => {
           adEl.remove();
           closedAdsCount++;
-
           if (closedAdsCount < 3) {
-            // Устанавливаем разное случайное время между появлениями (например, от 3 до 7 секунд)
-            const nextDelay = getRandomDelay(3, 7);
-            setTimeout(() => {
-              spawnRetroAd();
-            }, nextDelay);
+            setTimeout(() => spawnRetroAd(), getRandomDelay(3, 7));
           } else {
             showAdblockNotification();
           }
@@ -689,10 +808,822 @@
         note.className = "adblock-notification";
         note.innerHTML = `<span>🛡️</span> Мы включили adblock`;
         document.body.appendChild(note);
+        setTimeout(() => note.remove(), 4000);
+      }
+    });
+  </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лунария — Столичный город магии и света</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Forum&display=swap" rel="stylesheet">
 
-        setTimeout(() => {
-          note.remove();
-        }, 4000);
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #f0fdf4 0%, #fefce8 50%, #e0f2fe 100%);
+      --bg-creamy: rgba(255, 255, 255, 0.85);
+      --card-border: rgba(125, 211, 252, 0.4);
+      --primary-soft: #0284c7;
+      --primary-hover: #0369a1;
+      --accent-color: #f59e0b;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --shadow-soft: 0 20px 40px -15px rgba(2, 132, 199, 0.15);
+      --glow-light: 0 0 25px rgba(2, 132, 199, 0.25);
+      --particles: rgba(2, 132, 199, 0.08);
+      --th-bg: rgba(240, 249, 255, 0.8);
+    }
+
+    [data-theme="dark"] {
+      --bg-gradient: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
+      --bg-creamy: rgba(15, 23, 42, 0.85);
+      --card-border: rgba(56, 189, 248, 0.2);
+      --primary-soft: #38bdf8;
+      --primary-hover: #7dd3fc;
+      --accent-color: #fbbf24;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --shadow-soft: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.1);
+      --glow-light: 0 0 25px rgba(56, 189, 248, 0.3);
+      --particles: rgba(56, 189, 248, 0.05);
+      --th-bg: rgba(30, 41, 59, 0.6);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Comfortaa', cursive, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1rem 5rem 1rem;
+      position: relative;
+      overflow-x: hidden;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+
+    body::before {
+      content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle, var(--particles) 2px, transparent 2px);
+      background-size: 40px 40px; animation: magicFloat 40s linear infinite; z-index: -1; pointer-events: none;
+    }
+
+    @keyframes magicFloat {
+      0% { background-position: 0 0; }
+      100% { background-position: 400px 400px; }
+    }
+
+    .container { max-width: 1080px; width: 100%; z-index: 1; display: flex; flex-direction: column; gap: 2.5rem; }
+
+    header {
+      background: var(--bg-creamy); border: 1px solid var(--card-border); border-radius: 35px;
+      padding: 3.5rem 2.5rem; text-align: center; box-shadow: var(--shadow-soft);
+      position: relative; backdrop-filter: blur(16px);
+    }
+
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 12px; }
+    .left-group, .right-group { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+    .badge-btn {
+      background: var(--primary-soft); color: #fff; cursor: pointer;
+      padding: 0.7rem 1.4rem; border-radius: 20px; font-size: 0.9rem; font-weight: 700;
+      border: none; display: flex; align-items: center; gap: 8px;
+      text-decoration: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
+      font-family: inherit;
+    }
+    .badge-btn:hover { transform: translateY(-3px); background: var(--primary-hover); box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5); color: #fff; }
+    .badge-btn.map-btn { background: var(--accent-color); color: #fff; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); }
+    .badge-btn.map-btn:hover { background: #d97706; box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5); }
+    .badge-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+    .social-btn, .control-btn {
+      width: 44px; height: 44px; border-radius: 50%; background: var(--th-bg);
+      border: 1px solid var(--card-border); color: var(--text-main); display: flex; align-items: center;
+      justify-content: center; transition: all 0.3s ease; text-decoration: none; cursor: pointer;
+    }
+    .social-btn:hover, .control-btn:hover { transform: translateY(-3px); border-color: var(--primary-soft); box-shadow: var(--glow-light); color: var(--primary-soft); }
+    
+    .social-btn svg { width: 22px; height: 22px; fill: currentColor; }
+    .control-btn svg { width: 20px; height: 20px; fill: currentColor; stroke: currentColor; stroke-width: 1.5; }
+
+    .logo-container {
+      max-width: 180px; width: 100%; margin: 0 auto 1rem auto;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+      animation: floatLogo 4s ease-in-out infinite;
+      cursor: pointer;
+      position: relative;
+    }
+    @keyframes floatLogo {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes bounceClick {
+      0% { transform: scale(1); }
+      50% { transform: scale(0.85) translateY(-15px); }
+      100% { transform: scale(1); }
+    }
+    .logo-container.clicked { animation: bounceClick 0.4s ease forwards; }
+
+    /* Не кликабельный логотип в режиме Порталии[cite: 12] */
+    .logo-container.portalia-locked {
+      pointer-events: none !important;
+      cursor: default !important;
+    }
+
+    /* Анимация разового переворота логотипа (180 градусов и обратно) */
+    .logo-container.portalia-flip {
+      animation: flipLogoOnce 1.5s ease forwards !important;
+    }
+    @keyframes flipLogoOnce {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(180deg); }
+      100% { transform: translateY(0) rotate(360deg); }
+    }
+
+    /* Переливание логотипа разными цветами во время режима Порталии[cite: 12] */
+    .logo-container.portalia-colors svg path {
+      animation: colorShift 1.5s infinite linear;
+    }
+    @keyframes colorShift {
+      0% { fill: #8b5cf6; }
+      25% { fill: #ec4899; }
+      50% { fill: #38bdf8; }
+      75% { fill: #fbbf24; }
+      100% { fill: #8b5cf6; }
+    }
+
+    .logo-container svg { width: 100%; height: auto; display: block; pointer-events: none; }
+    .logo-container svg path { fill: var(--text-main); transition: fill 0.4s ease; }
+
+    .title-main {
+      font-family: 'Forum', serif; font-size: 3rem; letter-spacing: 0.04em; margin-bottom: 0.5px;
+      background: linear-gradient(135deg, var(--text-main) 30%, var(--primary-soft));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      transition: all 0.5s ease;
+    }
+    
+    .portalia-mode {
+      background: linear-gradient(135deg, #8b5cf6 30%, #ec4899);
+      -webkit-background-clip: text;
+      animation: pulseMagic 2s infinite alternate;
+    }
+    @keyframes pulseMagic {
+      0% { text-shadow: 0 0 10px rgba(139, 92, 246, 0.2); transform: scale(1); }
+      100% { text-shadow: 0 0 25px rgba(236, 72, 153, 0.6); transform: scale(1.05); }
+    }
+
+    .subtitle { color: var(--primary-soft); font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; }
+    
+    .metro-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(239, 68, 68, 0.1); border: 1.5px solid #ef4444; color: #ef4444;
+      padding: 0.5rem 1.2rem; border-radius: 20px; font-weight: 700; font-size: 0.9rem;
+      margin-bottom: 1.5rem; box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
+      cursor: pointer; transition: all 0.3s;
+    }
+    .metro-badge:hover { background: #ef4444; color: #fff; transform: scale(1.05); }
+    .metro-badge svg { width: 16px; height: 16px; fill: currentColor; }
+    
+    .description { color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; max-width: 760px; margin: 0 auto; }
+
+    .section-box {
+      background: var(--bg-creamy); border: 1px solid var(--card-border); border-radius: 35px;
+      padding: 3rem 2.5rem; box-shadow: var(--shadow-soft); backdrop-filter: blur(16px);
+      transition: transform 0.3s ease;
+    }
+
+    .section-title {
+      font-family: 'Forum', serif; letter-spacing: 0.05em; font-size: 2.2rem; color: var(--text-main);
+      margin-bottom: 2rem; display: flex; align-items: center; gap: 12px;
+    }
+    .section-title svg { width: 28px; height: 28px; stroke: var(--primary-soft); fill: none; stroke-width: 2; }
+
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+    .feature-card { background: var(--th-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 1.8rem; text-align: center; transition: all 0.3s ease; }
+    .feature-card:hover { transform: translateY(-5px); border-color: var(--primary-soft); box-shadow: var(--glow-light); }
+    .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+    .feature-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--text-main); }
+    .feature-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
+
+    .lore-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; }
+    .lore-text p { color: var(--text-muted); line-height: 1.8; font-size: 1.05rem; margin-bottom: 1rem; }
+    .lore-card-visual { background: var(--th-bg); border: 1px solid var(--card-border); border-radius: 25px; padding: 2rem; position: relative; overflow: hidden; }
+    .lore-quote { font-family: 'Forum', serif; font-size: 1.4rem; color: var(--primary-soft); font-style: italic; line-height: 1.5; }
+
+    .residents-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 3rem 2rem; margin-top: 2rem; }
+    .resident-card { background: var(--th-bg); border: 1px solid var(--card-border); border-radius: 25px; padding: 4.5rem 1.8rem 2rem 1.8rem; text-align: center; transition: all 0.4s ease; position: relative; }
+    .resident-card:hover { transform: translateY(-8px); border-color: var(--primary-soft); box-shadow: var(--glow-light); }
+    .resident-avatar-container { position: absolute; top: -85px; left: 50%; transform: translateX(-50%); width: 130px; height: 140px; pointer-events: none; }
+    .resident-avatar { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.25)); transition: transform 0.4s ease; }
+    .resident-card:hover .resident-avatar { transform: scale(1.1) translateY(-5px); }
+    .resident-name { font-weight: 700; font-size: 1.3rem; color: var(--text-main); margin-bottom: 0.3rem; }
+    .resident-role { font-size: 0.9rem; font-weight: 600; color: var(--primary-soft); margin-bottom: 0.8rem; }
+    .resident-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+
+    .gallery-container { display: flex; flex-direction: column; gap: 1.8rem; }
+    .gallery-filter-tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: thin; }
+    .tab-btn { background: var(--th-bg); border: 1px solid var(--card-border); color: var(--text-main); padding: 0.6rem 1.4rem; border-radius: 18px; font-family: inherit; font-size: 0.9rem; font-weight: 700; white-space: nowrap; transition: all 0.3s ease; cursor: pointer; }
+    .tab-btn.active, .tab-btn:hover { background: var(--primary-soft); color: #fff; border-color: var(--primary-soft); box-shadow: var(--glow-light); transform: translateY(-2px); }
+
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.2rem; }
+    .gallery-item { position: relative; height: 260px; border-radius: 22px; overflow: hidden; border: 1px solid var(--card-border); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; }
+    .gallery-item:hover { transform: translateY(-6px) scale(1.02); border-color: var(--primary-soft); box-shadow: var(--glow-light); }
+    .gallery-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; background: linear-gradient(135deg, var(--th-bg), rgba(2, 132, 199, 0.3)); transition: transform 0.5s ease; }
+    .gallery-item:hover .gallery-bg { transform: scale(1.1); }
+    .gallery-content { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(2, 6, 23, 0.9) 0%, rgba(2, 6, 23, 0.3) 50%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 1.2rem; color: #fff; }
+    .gallery-number { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.2); color: var(--accent-color); font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 12px; }
+    .gallery-title { font-family: 'Forum', serif; letter-spacing: 0.03em; font-size: 1.3rem; margin-bottom: 0.3rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    .gallery-desc { font-size: 0.85rem; opacity: 0.85; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+    .lightbox-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(12px); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.4s ease; padding: 2rem; }
+    .lightbox-overlay.active { opacity: 1; visibility: visible; }
+    .lightbox-container { position: relative; width: 100%; max-width: 1100px; height: 80vh; max-height: 700px; border-radius: 35px; overflow: hidden; border: 1px solid var(--card-border); box-shadow: 0 25px 60px rgba(0,0,0,0.7); transform: scale(0.95); transition: transform 0.4s ease; background: var(--bg-gradient); }
+    .lightbox-overlay.active .lightbox-container { transform: scale(1); }
+    .lightbox-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+    .lightbox-gradient { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(2, 6, 23, 0.95) 0%, rgba(2, 6, 23, 0.4) 50%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 3rem 4rem; color: #fff; pointer-events: none; }
+    .lightbox-gradient > * { pointer-events: auto; }
+    .lightbox-close { position: absolute; top: 20px; right: 20px; width: 45px; height: 45px; border-radius: 50%; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; z-index: 10; transition: all 0.3s ease; cursor: pointer; }
+    .lightbox-close:hover { background: var(--primary-soft); transform: rotate(90deg); }
+    .lightbox-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; border-radius: 50%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.3s ease; cursor: pointer; }
+    .lightbox-nav-btn:hover { background: var(--primary-soft); color: #0f172a; }
+    .lightbox-prev { left: 20px; }
+    .lightbox-next { right: 20px; }
+    .lightbox-badge { display: inline-block; background: var(--primary-soft); color: #fff; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 12px; font-size: 0.85rem; margin-bottom: 0.8rem; width: max-content; }
+    .lightbox-title { font-family: 'Forum', serif; letter-spacing: 0.03em; font-size: 2.6rem; margin-bottom: 1rem; }
+    .lightbox-desc { font-size: 1.1rem; line-height: 1.7; opacity: 0.9; max-width: 800px; margin-bottom: 1.5rem; }
+    .lightbox-actions { display: flex; gap: 15px; z-index: 5; }
+    .lightbox-map-btn { background: var(--accent-color); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 20px; font-family: inherit; font-weight: 700; font-size: 1rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s; }
+    .lightbox-map-btn:hover { background: #d97706; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4); }
+
+    .map-inner { position: relative; width: 100%; height: 100%; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: grab; }
+    .map-inner:active { cursor: grabbing; }
+    .map-image-wrapper { position: relative; max-width: 100%; display: inline-block; transition: transform 0.1s ease-out; transform-origin: center center; }
+    .map-image { display: block; max-width: 100%; height: auto; border-radius: 15px; user-select: none; pointer-events: none; }
+    .map-controls-hint { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; pointer-events: none; backdrop-filter: blur(5px); z-index: 100; }
+    
+    .map-pin { position: absolute; width: 30px; height: 30px; background: var(--primary-soft); border: 3px solid #fff; border-radius: 50% 50% 50% 0; transform: translate(-50%, -100%) rotate(-45deg); cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .map-pin:hover { transform: translate(-50%, -100%) rotate(-45deg) scale(1.2); background: var(--accent-color); z-index: 10; }
+    .map-pin.highlight { animation: pinPulse 1.5s infinite; background: var(--accent-color); z-index: 10; }
+    @keyframes pinPulse { 0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); } 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
+    .map-pin-inner { width: 10px; height: 10px; background: #fff; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .map-pin::after { content: attr(data-title); position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%) rotate(45deg); background: rgba(15, 23, 42, 0.9); color: #fff; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-family: 'Comfortaa', sans-serif; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.3s; }
+    .map-pin:hover::after { opacity: 1; transform: translateX(-50%) rotate(45deg); }
+
+    .retro-ad-popup { position: fixed; background: #c0c0c0; border: 2px outset #ffffff; box-shadow: 4px 4px 10px rgba(0,0,0,0.5); font-family: "MS Sans Serif", Tahoma, sans-serif; width: 320px; z-index: 9999; user-select: none; }
+    .retro-ad-titlebar { background: linear-gradient(90deg, #000080, #1084d0); color: white; padding: 4px 8px; font-size: 11px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+    .retro-ad-close { background: #c0c0c0; border: 1px outset #ffffff; color: black; font-weight: bold; width: 16px; height: 16px; font-size: 10px; line-height: 12px; text-align: center; cursor: pointer; }
+    .retro-ad-close:active { border-style: inset; }
+    .retro-ad-content { padding: 12px; text-align: center; background: #ece9d8; }
+    .retro-ad-content img { max-width: 100%; height: auto; border: 1px solid #7f9db9; margin-bottom: 8px; }
+    .retro-ad-text { font-size: 12px; color: #000; margin-bottom: 10px; font-weight: bold; }
+    .retro-ad-btn { background: #dfdfdf; border: 2px outset #ffffff; padding: 4px 12px; font-family: inherit; font-size: 11px; font-weight: bold; cursor: pointer; }
+    .retro-ad-btn:active { border-style: inset; }
+    .adblock-notification { position: fixed; bottom: 25px; right: 25px; background: #ffffe0; border: 2px outset #ffffff; outline: 2px solid #cc0000; padding: 14px 20px; font-family: "MS Sans Serif", Tahoma, sans-serif; font-size: 13px; font-weight: bold; color: #cc0000; box-shadow: 5px 5px 15px rgba(0,0,0,0.4); z-index: 9998; display: flex; align-items: center; gap: 12px; animation: fadeInOut 4s ease forwards; }
+    @keyframes fadeInOut { 0% { opacity: 0; transform: translateY(20px); } 15% { opacity: 1; transform: translateY(0); } 85% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(20px); pointer-events: none; } }
+
+    .relocate-banner { background: linear-gradient(135deg, rgba(2, 132, 199, 0.15), rgba(245, 158, 11, 0.15)); border: 2px dashed var(--primary-soft); border-radius: 35px; padding: 3.5rem 2rem; text-align: center; box-shadow: var(--shadow-soft); transition: all 0.5s ease; scroll-margin-top: 100px; }
+    .relocate-banner.highlight-mode { border-color: var(--accent-color); box-shadow: 0 0 30px rgba(245, 158, 11, 0.3); transform: scale(1.02); }
+    .relocate-banner h2 { font-family: 'Forum', serif; letter-spacing: 0.05em; font-size: 2.6rem; color: var(--text-main); margin-bottom: 1rem; }
+    .relocate-banner p { color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; max-width: 650px; margin: 0 auto 2rem auto; }
+    .relocate-btn { background: var(--primary-soft); color: #fff; padding: 1rem 2.5rem; border-radius: 25px; font-size: 1.1rem; font-weight: 700; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4); cursor: pointer; }
+    .relocate-btn:hover { transform: translateY(-4px) scale(1.05); background: var(--primary-hover); box-shadow: 0 8px 25px rgba(2, 132, 199, 0.6); color: #fff; }
+
+    .morph-scroll-btn {
+      position: fixed; bottom: 30px; left: 30px; width: 60px; height: 60px; border-radius: 50%;
+      background: var(--accent-color); color: #fff; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4); cursor: pointer; z-index: 1000;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0; visibility: hidden; transform: translateY(20px);
+    }
+    .morph-scroll-btn.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+    .morph-scroll-btn:hover { background: #d97706; transform: translateY(-5px) scale(1.1); }
+    .morph-scroll-btn.morphed { transform: scale(0.1) translateY(100px); opacity: 0; }
+    .morph-scroll-btn svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2; fill: none; }
+
+    footer { text-align: center; color: var(--text-muted); font-size: 0.95rem; display: flex; flex-direction: column; gap: 6px; padding-top: 1rem; }
+    .creators-tag { font-weight: 700; color: var(--primary-soft); }
+    .developer-tag { font-size: 0.8rem; margin-top: 10px; opacity: 0.7; }
+
+    @media (max-width: 768px) {
+      .lore-grid { grid-template-columns: 1fr; }
+      .section-box { padding: 1.8rem; }
+      .title-main { font-size: 2.2rem; }
+      .relocate-banner h2 { font-size: 2rem; }
+      .lightbox-container { height: 90vh; }
+      .lightbox-gradient { padding: 1.5rem; }
+      .lightbox-title { font-size: 2rem; }
+      .morph-scroll-btn { left: 20px; bottom: 20px; width: 50px; height: 50px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="top-bar">
+        <div class="left-group">
+          <a href="https://animunnug.github.io/LunariaRP/" target="_blank" class="badge-btn">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Ресурспак</span>
+          </a>
+          <button class="badge-btn map-btn" onclick="openMapLightbox()">
+            <svg viewBox="0 0 24 24"><path d="M3 6l6-3 6 3 6-3v12l-6 3-6-3-6 3V6z"/><line x1="9" y1="3" x2="9" y2="15"/><line x1="15" y1="6" x2="15" y2="18"/></svg>
+            <span>Карта города</span>
+          </button>
+          
+          <a href="https://discord.gg/ВАШ_СЕРВЕР" class="social-btn" target="_blank" title="Discord сервер">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36">
+              <path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.63-27.29-4.5-51.05-19.45-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5.18-12.72,11.45-12.72S53.9,46,53.88,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.72,11.45-12.72S96.15,46,96.13,53,91,65.69,84.69,65.69Z"/>
+            </svg>
+          </a>
+        </div>
+        
+        <div class="right-group">
+          <button class="control-btn" id="themeToggle" onclick="toggleTheme()" title="Сменить тему">
+            <svg id="themeIcon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </button>
+        </div>
+      </div>
+      
+      <div class="logo-container" id="mainLogo" onclick="animateLogo(this)">
+        <svg viewBox="0 0 826 710" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M533.234 296.952L529.363 289.051C530.699 291.661 531.989 294.296 533.234 296.952Z" />
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M533.234 296.952L529.363 289.051C526.201 282.597 518.212 280.205 512.024 283.858L318.361 398.199C283.57 418.837 237.04 416.311 217.289 380.493C152.962 263.832 247.601 109.414 363.39 41.0886C373.02 35.4063 382.841 30.3735 392.807 25.9767C405.876 20.2112 404.737 -0.0395354 390.503 5.79775e-05C333.623 0.158281 278.627 18.5949 226.248 49.5032C62.6083 146.065 6.52277 359.907 100.952 527.168C100.952 527.168 86.9019 549.721 58.4086 553.986C52.1254 554.926 43.5774 555.21 34.0828 555.081C10.8512 554.764 -4.98115 578.023 1.43635 597.741C3.66275 604.582 12.0712 605.75 18.2604 602.083L396.864 377.754C404.279 373.36 413.771 376.232 415.652 384.643C417.055 390.917 417.477 395.866 417.477 395.866C417.592 397.214 417.716 398.659 417.859 400.226C419.139 414.236 417.738 428.432 413.738 441.973C409.738 455.513 403.22 468.123 394.57 479.057C385.92 489.99 375.313 499.024 363.379 505.625C351.445 512.225 338.424 516.258 325.089 517.484C311.754 518.71 298.375 517.105 285.743 512.762C268.538 506.848 249.065 504.826 233.485 514.22L165.349 555.304C147.865 565.846 143.426 589.501 158.386 603.394C182.165 625.474 209.996 642.207 240.231 652.6C270.467 662.994 302.494 666.837 334.415 663.903C366.336 660.968 397.502 651.314 426.07 635.515C454.637 619.714 480.026 598.089 500.731 571.918C521.437 545.746 537.039 515.561 546.615 483.149C556.191 450.737 559.546 416.756 556.481 383.219C553.728 353.092 545.843 323.873 533.234 296.952Z" />
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M824.664 112.675C825.706 116.051 826.101 119.524 825.925 122.959C825.077 139.499 810.98 155.17 791.883 154.909C783.99 154.802 776.757 154.979 770.931 155.582C769.746 155.705 768.619 155.845 767.557 156.004C739.064 160.268 725.013 182.821 725.013 182.821C819.442 350.082 763.357 563.924 599.717 660.486C547.338 691.395 492.342 709.831 435.462 709.989C421.229 710.029 420.09 689.778 433.158 684.013C443.124 679.616 452.946 674.583 462.575 668.901C582.191 598.317 643.069 444.46 584.703 294.047C581.587 286.017 578.25 278.833 574.569 272.067C568.833 261.521 571.615 247.971 581.94 241.846L807.703 107.916C813.893 104.244 822.303 105.407 824.53 112.251C824.576 112.392 824.621 112.534 824.664 112.675Z" />
+        </svg>
+      </div>
+
+      <h1 class="title-main" id="mainTitle">ЛУНАРИЯ</h1>
+      <p class="subtitle" id="mainSubtitle">Столичный город магии, света и историй</p>
+      
+      <div class="metro-badge" onclick="copyPortalCoordinates()">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+        <span id="metroBadgeText">Красная ветка, 1145</span>
+      </div>
+
+      <p class="description" id="mainDescription">Сердце нашего мира, раскинувшееся вблизи ключевых путей сообщения. Место, где переплетаются древние тайны, амбициозные проекты архитекторов и уютная атмосфера живого сообщества.</p>
+    </header>
+
+    <div class="section-box">
+      <h2 class="section-title">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Почему нас выбирают
+      </h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-icon">✨</span>
+          <div class="feature-title">Топовый дизайн всего</div>
+          <div class="feature-desc">Уникальный стиль построек, гармонично вписанный в ландшафт с кастомным ресурспаком и ванильными 3D-моделями.</div>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">😎</span>
+          <div class="feature-title">Тут живут крутые чуваки</div>
+          <div class="feature-desc">Активные торговцы, строители и надежные соседи со всего сервера.</div>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🎉</span>
+          <div class="feature-title">Веселые ивенты</div>
+          <div class="feature-desc">Регулярные праздники, интерактивные мероприятия и бурная жизнь города.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-box">
+      <h2 class="section-title">
+        <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Лор и история
+      </h2>
+      <div class="lore-grid">
+        <div class="lore-text">
+          <p>Основанная в эпоху великих переселений, Лунария начиналась как скромный приют для странников у мерцающего источника. Со временем город вырос в величественный бастион культуры, торговли и ремесел.</p>
+          <p>Добраться до нас проще простого — через портал на Красной ветке (координата 1145), который служит главным связующим звеном со всеми ключевыми дорогами мира.</p>
+        </div>
+        <div class="lore-card-visual">
+          <div class="lore-quote">«Лунария — это не просто дома и дороги. Это свет, который мы создаем вместе.»</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-box">
+      <div class="residents-grid">
+        <div class="resident-card">
+          <div class="resident-avatar-container">
+            <img src="путь_к_картинке_мэра.png" alt="Moonray" class="resident-avatar">
+          </div>
+          <div class="resident-name">Moonray</div>
+          <div class="resident-role">Мэр города</div>
+          <div class="resident-desc">Главный градоначальник, идейный вдохновитель и защитник порядка столицы.</div>
+        </div>
+        <div class="resident-card">
+          <div class="resident-avatar-container">
+            <img src="путь_к_картинке_жены.png" alt="Tommomy" class="resident-avatar">
+          </div>
+          <div class="resident-name">Tommomy</div>
+          <div class="resident-role">Чудесная жена мэра</div>
+          <div class="resident-desc">Хранительница красоты, уюта и гармонии в самом сердце Лунарии.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-box">
+      <h2 class="section-title">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Интерактивная экскурсия
+      </h2>
+
+      <div class="gallery-container">
+        <div class="gallery-filter-tabs">
+          <button class="tab-btn active" onclick="filterGallery('all', event)">Все места</button>
+          <button class="tab-btn" onclick="filterGallery('architecture', event)">Архитектура</button>
+          <button class="tab-btn" onclick="filterGallery('infrastructure', event)">Инфраструктура</button>
+          <button class="tab-btn" onclick="filterGallery('shops', event)">Торговые точки</button>
+          <button class="tab-btn" onclick="filterGallery('nature', event)">Природа</button>
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid"></div>
+      </div>
+    </div>
+
+    <div class="relocate-banner" id="targetRelocateBlock">
+      <h2>Стань частью нашей истории!</h2>
+      <p>Лунария открывает свои двери для новых жителей, амбициозных строителей и искателей приключений. Прибывайте через портал на Красной ветке (1145) или залетайте в наш Discord!</p>
+      <a href="https://discord.gg/ВАШ_СЕРВЕР" target="_blank" class="relocate-btn">
+        <span>Переехать в Лунарию</span>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <footer>
+      <p>✨ С любовью из Лунарии | SPm Server</p>
+      <p class="creators-tag">Столичный портал города</p>
+      <p class="developer-tag">Связь с разработчиком: animun_second (Discord)</p>
+    </footer>
+  </div>
+
+  <div id="morphScrollBtn" class="morph-scroll-btn" onclick="scrollToBottom()" title="Вниз сайта">
+    <svg viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+  </div>
+
+  <div id="lightboxOverlay" class="lightbox-overlay" onclick="closeLightbox(event)">
+    <div class="lightbox-container">
+      <button class="lightbox-nav-btn lightbox-prev" onclick="changeLightboxSlide(-1, event)">&#10094;</button>
+      <button class="lightbox-nav-btn lightbox-next" onclick="changeLightboxSlide(1, event)">&#10095;</button>
+      <img id="lightboxImg" class="lightbox-bg" src="" alt="">
+      <div class="lightbox-gradient">
+        <button class="lightbox-close" onclick="forceCloseLightbox()">×</button>
+        <div id="lightboxBadge" class="lightbox-badge">Категория</div>
+        <h2 id="lightboxTitle" class="lightbox-title">Заголовок</h2>
+        <p id="lightboxDesc" class="lightbox-desc">Описание места...</p>
+        <div class="lightbox-actions">
+          <button class="lightbox-map-btn" onclick="openMapFromLightbox(event)">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Показать на карте
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="mapLightboxOverlay" class="lightbox-overlay" onclick="closeMapLightbox(event)">
+    <div class="lightbox-container" style="background: var(--th-bg);">
+      <button class="lightbox-close" onclick="forceCloseMapLightbox()">×</button>
+      <div class="map-inner" id="mapModalContainer">
+        <div class="map-controls-hint">💡 Зум: колесико мыши | Перемещение: зажать и тянуть</div>
+        <div class="map-image-wrapper" id="mapImageWrapper">
+          <img src="путь_к_карте_города.png" alt="Карта Лунарии" class="map-image" id="cityMapImage">
+          <div id="mapMarkersContainer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const logoColors = ['#0284c7', '#f59e0b', '#ef4444', '#10b981', '#8b5cf6'];
+    let logoClicks = 0;
+
+    function animateLogo(el) {
+      el.classList.remove('clicked');
+      void el.offsetWidth;
+      el.classList.add('clicked');
+      
+      logoClicks++;
+      if (logoClicks === 67) {
+        triggerPortaliaEasterEgg();
+        logoClicks = 0;
+      } else {
+        const randomColor = logoColors[Math.floor(Math.random() * logoColors.length)];
+        el.querySelectorAll('path').forEach(p => p.style.fill = randomColor);
+      }
+    }
+
+    function triggerPortaliaEasterEgg() {
+      const logoEl = document.getElementById('mainLogo');
+      
+      // Фиксация темы (тема сайта больше не меняется автоматически)[cite: 12]
+      document.getElementById('mainTitle').innerText = "ПОРТАЛИЯ";
+      document.getElementById('mainTitle').classList.add('portalia-mode');
+      document.getElementById('mainSubtitle').innerText = "Секретное измерение магии и квантовых аномалий";
+      
+      document.getElementById('metroBadgeText').innerText = "бля. она точно будет...когда нибудь";
+
+      document.getElementById('mainDescription').innerText = "Вы активировали скрытый резонанс Порталии! Добро пожаловать в изнанку мира, где законы пространства и времени подчиняются чистой энергии порталов.";
+      
+      // Логотип становится не кликабельным, переворачивается один раз и переливается разными цветами[cite: 12]
+      logoEl.classList.add('portalia-locked');
+      logoEl.classList.add('portalia-flip');
+      logoEl.classList.add('portalia-colors');
+
+      const notif = document.createElement("div");
+      notif.className = "adblock-notification";
+      notif.style.outlineColor = "#8b5cf6";
+      notif.style.color = "#8b5cf6";
+      notif.innerHTML = `<span>🌌</span> Режим «Порталия» активирован!`;
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 4000);
+
+      // Таймер ровно на 15 секунд для возвращения логотипа в исходное положение[cite: 12]
+      setTimeout(() => {
+        document.getElementById('mainTitle').innerText = "ЛУНАРИЯ";
+        document.getElementById('mainTitle').classList.remove('portalia-mode');
+        document.getElementById('mainSubtitle').innerText = "Столичный город магии, света и историй";
+        document.getElementById('metroBadgeText').innerText = "Красная ветка, 1145";
+        document.getElementById('mainDescription').innerText = "Сердце нашего мира, раскинувшееся вблизи ключевых путей сообщения. Место, где переплетаются древние тайны, амбициозные проекты архитекторов и уютная атмосфера живого сообщества.";
+
+        // Снимаем блокировку, убираем классы анимаций и возвращаем стандартный цвет путей
+        logoEl.classList.remove('portalia-locked');
+        logoEl.classList.remove('portalia-flip');
+        logoEl.classList.remove('portalia-colors');
+        logoEl.querySelectorAll('path').forEach(p => p.style.fill = 'var(--text-main)');
+
+        const endNotif = document.createElement("div");
+        endNotif.className = "adblock-notification";
+        endNotif.style.outlineColor = "#0284c7";
+        endNotif.style.color = "#0284c7";
+        endNotif.innerHTML = `<span>✨</span> Режим «Порталия» завершён.`;
+        document.body.appendChild(endNotif);
+        setTimeout(() => endNotif.remove(), 4000);
+      }, 15000);
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const newTheme = isDark ? 'light' : 'dark';
+      const themeIcon = document.getElementById('themeIcon');
+      themeIcon.innerHTML = newTheme === 'dark' 
+        ? `<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>` 
+        : `<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>`;
+      
+      document.documentElement.setAttribute('data-theme', newTheme);
+      document.getElementById('mainLogo').querySelectorAll('path').forEach(p => p.style.fill = 'var(--text-main)');
+    }
+
+    function copyPortalCoordinates() {
+      const currentCoords = document.getElementById('metroBadgeText').innerText;
+      navigator.clipboard.writeText(currentCoords);
+      const notif = document.createElement("div");
+      notif.className = "adblock-notification";
+      notif.innerHTML = `<span>📋</span> Скопировано в буфер обмена!`;
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 3000);
+    }
+
+    const tourData = [
+      { title: "Центральная Библиотека", desc: "Хранилище древних фолиантов, секретов кастомных текстур и чертежей построек.", category: "architecture", catName: "Архитектура", img: "", mapX: 400, mapY: 200 },
+      { title: "Портал (Красная ветка, 1145)", desc: "Точка входа в Лунарию с общей транспортной системы.", category: "infrastructure", catName: "Инфраструктура", img: "", mapX: 150, mapY: 450 },
+      { title: "Лунная площадь", desc: "Просторная зона отдыха с величественным монументом и уютными лавочками.", category: "nature", catName: "Природа", img: "", mapX: 400, mapY: 300 },
+      { title: "Рынок «У Мэра»", desc: "Центральная торговая точка, где жители обмениваются ресурсами.", category: "shops", catName: "Торговые точки", img: "", mapX: 320, mapY: 280 },
+      { title: "Лавка Томмоми", desc: "Магазин эксклюзивных строительных материалов.", category: "shops", catName: "Торговые точки", img: "", mapX: 360, mapY: 250 },
+      { title: "Резиденция Мэра", desc: "Официальный дом градоначальника Moonray.", category: "architecture", catName: "Архитектура", img: "", mapX: 500, mapY: 180 }
+    ];
+
+    function renderGallery() {
+      const grid = document.getElementById('galleryGrid');
+      grid.innerHTML = '';
+      tourData.forEach((item, index) => {
+        const num = (index + 1).toString().padStart(2, '0');
+        grid.innerHTML += `
+          <div class="gallery-item" data-category="${item.category}" onclick="openLightboxByIndex(${index})">
+            <img class="gallery-bg" src="${item.img}" alt="">
+            <div class="gallery-content">
+              <span class="gallery-number">#${num}</span>
+              <div class="gallery-title">${item.title}</div>
+              <div class="gallery-desc">${item.desc}</div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function filterGallery(category, event) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      document.querySelectorAll('.gallery-item').forEach(item => {
+        item.style.display = (category === 'all' || item.getAttribute('data-category') === category) ? 'block' : 'none';
+      });
+    }
+
+    let currentTourIndex = 0;
+    function openLightboxByIndex(index) {
+      currentTourIndex = index;
+      updateLightboxContent();
+      forceCloseMapLightbox();
+      document.getElementById('lightboxOverlay').classList.add('active');
+    }
+    function updateLightboxContent() {
+      const item = tourData[currentTourIndex];
+      document.getElementById('lightboxImg').src = item.img;
+      document.getElementById('lightboxTitle').innerText = item.title;
+      document.getElementById('lightboxDesc').innerText = item.desc;
+      document.getElementById('lightboxBadge').innerText = item.catName;
+    }
+    function changeLightboxSlide(direction, event) {
+      if (event) event.stopPropagation();
+      currentTourIndex = (currentTourIndex + direction + tourData.length) % tourData.length;
+      updateLightboxContent();
+    }
+    function closeLightbox(e) { if (e.target.id === 'lightboxOverlay') forceCloseLightbox(); }
+    function forceCloseLightbox() { document.getElementById('lightboxOverlay').classList.remove('active'); }
+
+    let mapScale = 1;
+    let mapPosX = 0;
+    let mapPosY = 0;
+    let isDraggingMap = false;
+    let startDragX = 0;
+    let startDragY = 0;
+
+    function initInteractiveMap() {
+      const container = document.getElementById('mapModalContainer');
+      const wrapper = document.getElementById('mapImageWrapper');
+
+      container.onmousedown = (e) => {
+        if(e.target.closest('.map-pin')) return;
+        isDraggingMap = true;
+        startDragX = e.clientX - mapPosX;
+        startDragY = e.clientY - mapPosY;
+      };
+
+      window.onmousemove = (e) => {
+        if (!isDraggingMap) return;
+        mapPosX = e.clientX - startDragX;
+        mapPosY = e.clientY - startDragY;
+        updateMapTransform();
+      };
+
+      window.onmouseup = () => { isDraggingMap = false; };
+
+      container.onwheel = (e) => {
+        e.preventDefault();
+        const zoomStep = 0.15;
+        if (e.deltaY < 0) {
+          mapScale = Math.min(mapScale + zoomStep, 3);
+        } else {
+          mapScale = Math.max(mapScale - zoomStep, 0.5);
+        }
+        updateMapTransform();
+      };
+    }
+
+    function updateMapTransform() {
+      const wrapper = document.getElementById('mapImageWrapper');
+      wrapper.style.transform = `translate(${mapPosX}px, ${mapPosY}px) scale(${mapScale})`;
+    }
+
+    function renderMapMarkers() {
+      const container = document.getElementById('mapMarkersContainer');
+      container.innerHTML = '';
+      tourData.forEach((item, index) => {
+        if(item.mapX !== undefined && item.mapY !== undefined) {
+          const pin = document.createElement('div');
+          pin.className = 'map-pin';
+          pin.style.left = item.mapX + 'px';
+          pin.style.top = item.mapY + 'px';
+          pin.setAttribute('data-title', item.title);
+          pin.innerHTML = '<div class="map-pin-inner"></div>';
+          pin.onclick = (e) => {
+            e.stopPropagation();
+            openLightboxByIndex(index);
+          };
+          container.appendChild(pin);
+        }
+      });
+    }
+
+    function openMapLightbox(highlightIndex = -1) {
+      forceCloseLightbox();
+      renderMapMarkers();
+      mapScale = 1; mapPosX = 0; mapPosY = 0;
+      updateMapTransform();
+      
+      if(highlightIndex !== -1) {
+        const pins = document.querySelectorAll('.map-pin');
+        if(pins[highlightIndex]) pins[highlightIndex].classList.add('highlight');
+      }
+      document.getElementById('mapLightboxOverlay').classList.add('active');
+    }
+
+    function openMapFromLightbox(event) {
+      event.stopPropagation();
+      openMapLightbox(currentTourIndex);
+    }
+
+    function closeMapLightbox(e) { if (e.target.id === 'mapLightboxOverlay') forceCloseMapLightbox(); }
+    function forceCloseMapLightbox() { document.getElementById('mapLightboxOverlay').classList.remove('active'); }
+
+    function scrollToBottom() {
+      const targetBlock = document.getElementById('targetRelocateBlock');
+      const btn = document.getElementById('morphScrollBtn');
+      
+      btn.classList.add('morphed');
+      targetBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      targetBlock.classList.add('highlight-mode');
+      
+      setTimeout(() => {
+        targetBlock.classList.remove('highlight-mode');
+        btn.classList.remove('morphed');
+      }, 1000);
+    }
+
+    window.addEventListener('scroll', () => {
+      const btn = document.getElementById('morphScrollBtn');
+      if (window.scrollY > 300) {
+        btn.classList.add('visible');
+      } else {
+        btn.classList.remove('visible');
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderGallery();
+      initInteractiveMap();
+
+      let closedAdsCount = 0; 
+      const adVariations = [
+        { img: "images/ad/tuntun.gif", title: "Внимание! Срочно!", text: "ВЫ ВЫЙГРАЛИ ТУН ТУН ТУН! Нажмите сюда!", btnText: "Получить!" },
+        { img: "images/ad/diamond.gif", title: "Системное сообщение", text: "Найден баг на алмазы! Успей использовать до фикса!", btnText: "Узнать координаты" },
+        { img: "images/ad/admin.gif", title: "Поздравляем!", text: "Вы стали 1 000 000 посетителем! Заберите админку!", btnText: "Скачать" }
+      ];
+
+      function getRandomDelay(minSeconds, maxSeconds) {
+        return Math.floor(Math.random() * ((maxSeconds - minSeconds) * 1000 + 1)) + (minSeconds * 1000);
+      }
+
+      setTimeout(() => spawnRetroAd(), getRandomDelay(1.5, 3.5));
+
+      function spawnRetroAd() {
+        if (closedAdsCount >= 3) return;
+
+        const randomAd = adVariations[Math.floor(Math.random() * adVariations.length)];
+        const adEl = document.createElement("div");
+        adEl.className = "retro-ad-popup";
+
+        const maxLeft = window.innerWidth - 340;
+        const maxTop = window.innerHeight - 250;
+        adEl.style.left = Math.max(20, Math.floor(Math.random() * maxLeft)) + "px";
+        adEl.style.top = Math.max(20, Math.floor(Math.random() * maxTop)) + "px";
+
+        adEl.innerHTML = `
+          <div class="retro-ad-titlebar">
+            <span>${randomAd.title}</span>
+            <div class="retro-ad-close" title="Закрыть">X</div>
+          </div>
+          <div class="retro-ad-content">
+            <img src="${randomAd.img}" alt="Реклама из нулевых">
+            <div class="retro-ad-text">${randomAd.text}</div>
+            <button class="retro-ad-btn" onclick="alert('Поздравляем! Вы кликнули по рекламе из нулевых!')">${randomAd.btnText}</button>
+          </div>
+        `;
+
+        document.body.appendChild(adEl);
+
+        const closeBtn = adEl.querySelector(".retro-ad-close");
+        closeBtn.addEventListener("click", () => {
+          adEl.remove();
+          closedAdsCount++;
+          if (closedAdsCount < 3) {
+            setTimeout(() => spawnRetroAd(), getRandomDelay(3, 7));
+          } else {
+            showAdblockNotification();
+          }
+        });
+      }
+
+      function showAdblockNotification() {
+        const note = document.createElement("div");
+        note.className = "adblock-notification";
+        note.innerHTML = `<span>🛡️</span> Мы включили adblock`;
+        document.body.appendChild(note);
+        setTimeout(() => note.remove(), 4000);
       }
     });
   </script>
