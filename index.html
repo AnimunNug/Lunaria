@@ -1,1 +1,591 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лунария — Столичный город</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Comfortaa:wght@400;600;700&display=swap" rel="stylesheet">
 
+  <style>
+    /* ПЕРЕМЕННЫЕ СВЕТЛОЙ И ТЕМНОЙ ТЕМЫ */
+    :root {
+      --bg-gradient: linear-gradient(135deg, #e0f7fa 0%, #fffdf5 50%, #e0f2f1 100%);
+      --bg-creamy: rgba(255, 253, 245, 0.95);
+      --card-border: rgba(120, 210, 214, 0.4);
+      --primary-soft: #78d2d6;
+      --accent-color: #f5e0ac;
+      --text-main: #2c4a52;
+      --text-muted: #6b8e96;
+      --shadow-soft: 0 15px 35px rgba(120, 210, 214, 0.15);
+      --glow-light: 0 0 20px rgba(245, 224, 172, 0.6);
+      --particles: rgba(120, 210, 214, 0.15);
+      --th-bg: rgba(120, 210, 214, 0.2);
+    }
+
+    [data-theme="dark"] {
+      --bg-gradient: radial-gradient(circle at top, #14213d 0%, #070d1e 100%);
+      --bg-creamy: rgba(15, 28, 54, 0.95);
+      --card-border: rgba(91, 192, 190, 0.3);
+      --primary-soft: #5bc0be;
+      --accent-color: #90e0ef;
+      --text-main: #e0f2fe;
+      --text-muted: #94a3b8;
+      --shadow-soft: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(91, 192, 190, 0.2);
+      --glow-light: 0 0 20px rgba(91, 192, 190, 0.5);
+      --particles: rgba(91, 192, 190, 0.1);
+      --th-bg: rgba(91, 192, 190, 0.15);
+    }
+
+    /* КУРСОР И ОБЩИЕ СТИЛИ */
+    body {
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2378d2d6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4l7.07 16.97 2.51-7.39 7.39-2.51L4 4z'/%3E%3C/svg%3E") 4 4, auto;
+      font-family: 'Comfortaa', cursive, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1rem 5rem 1rem;
+      position: relative;
+      overflow-x: hidden;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+    
+    a, button, input, .social-btn, .resident-card, .gallery-item {
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23f5e0ac' stroke='%232c4a52' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4l7.07 16.97 2.51-7.39 7.39-2.51L4 4z'/%3E%3C/svg%3E") 4 4, pointer !important;
+    }
+
+    .cursor-sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: var(--accent-color);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      animation: sparkleAnim 0.6s ease-out forwards;
+    }
+
+    @keyframes sparkleAnim {
+      0% { transform: scale(1) translateY(0); opacity: 1; }
+      100% { transform: scale(0) translateY(18px); opacity: 0; }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body::before {
+      content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle, var(--particles) 1.5px, transparent 1.5px);
+      background-size: 50px 50px; animation: magicFloat 60s linear infinite; z-index: -1; pointer-events: none;
+    }
+
+    @keyframes magicFloat {
+      0% { background-position: 0px 0px; }
+      100% { background-position: 500px 500px; }
+    }
+
+    .container { max-width: 1040px; width: 100%; z-index: 1; display: flex; flex-direction: column; gap: 2.5rem; }
+
+    /* ШАПКА */
+    header {
+      background: var(--bg-creamy); border: 1px solid var(--card-border); border-radius: 35px;
+      padding: 3rem 2.5rem; text-align: center; box-shadow: var(--shadow-soft);
+      position: relative; backdrop-filter: blur(10px);
+    }
+
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 12px; }
+    .left-group, .right-group { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+    .download-badge {
+      background: linear-gradient(135deg, var(--primary-soft), #5eb3b8); color: #fff;
+      padding: 0.7rem 1.5rem; border-radius: 20px; font-size: 0.9rem; font-weight: 700;
+      border: none; display: flex; align-items: center; gap: 8px;
+      text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(120, 210, 214, 0.4);
+    }
+    .download-badge:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(120, 210, 214, 0.6); color: #fff; }
+    .download-badge svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+    .social-btn {
+      width: 42px; height: 42px; border-radius: 50%; background: transparent;
+      border: 1px solid var(--card-border); color: var(--text-main); display: flex; align-items: center;
+      justify-content: center; transition: all 0.3s ease; text-decoration: none;
+    }
+    .social-btn:hover { transform: translateY(-3px); border-color: var(--primary-soft); box-shadow: var(--glow-light); color: var(--primary-soft); }
+    .social-btn svg { width: 18px; height: 18px; }
+
+    .control-btn {
+      background: transparent; border: 1px solid var(--primary-soft); color: var(--text-main);
+      width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;
+    }
+    .control-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .control-btn:hover { background: var(--primary-soft); color: #fff; box-shadow: var(--glow-light); transform: rotate(15deg); }
+
+    .logo-img { max-width: 280px; height: auto; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15)); }
+    .subtitle { color: var(--primary-soft); font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; }
+    
+    .metro-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(239, 68, 68, 0.12); border: 2px solid #ef4444; color: #ef4444;
+      padding: 0.5rem 1.3rem; border-radius: 20px; font-weight: 700; font-size: 0.95rem;
+      margin-bottom: 1.5rem; box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+    }
+    .metro-badge svg { width: 18px; height: 18px; fill: currentColor; }
+
+    .description { color: var(--text-muted); font-size: 1.05rem; line-height: 1.8; max-width: 720px; margin: 0 auto; }
+
+    /* ОБЩИЕ СЕКЦИИ */
+    .section-box {
+      background: var(--bg-creamy); border: 1px solid var(--card-border); border-radius: 35px;
+      padding: 3rem 2.5rem; box-shadow: var(--shadow-soft); backdrop-filter: blur(10px);
+      transition: transform 0.3s ease;
+    }
+    .section-box:hover { transform: translateY(-3px); }
+
+    .section-title {
+      font-family: 'Cinzel Decorative', serif; font-size: 1.8rem; color: var(--text-main);
+      margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px;
+    }
+    .section-title svg { width: 28px; height: 28px; stroke: var(--primary-soft); fill: none; stroke-width: 2; }
+
+    /* ЛОР */
+    .lore-single p { color: var(--text-muted); line-height: 1.8; font-size: 1.05rem; margin-bottom: 1rem; }
+
+    /* РУКОВОДСТВО */
+    .residents-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 3rem 2rem; margin-top: 3.5rem; }
+    .resident-card {
+      background: var(--th-bg); border: 1px solid var(--card-border); border-radius: 25px;
+      padding: 4.5rem 1.8rem 2rem 1.8rem; text-align: center; transition: all 0.4s ease; position: relative;
+    }
+    .resident-card:hover { transform: translateY(-8px); border-color: var(--primary-soft); box-shadow: var(--glow-light); }
+    
+    .resident-avatar-container {
+      position: absolute; top: -95px; left: 50%; transform: translateX(-50%);
+      width: 140px; height: 160px; pointer-events: none;
+    }
+    .resident-avatar {
+      width: 100%; height: 100%; object-fit: contain; display: block;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3)); transition: transform 0.4s ease;
+    }
+    .resident-card:hover .resident-avatar { transform: scale(1.08) translateY(-6px); }
+    
+    .resident-info { margin-top: 1rem; }
+    .resident-name { font-weight: 700; font-size: 1.2rem; color: var(--text-main); margin-bottom: 0.3rem; }
+    .resident-role { font-size: 0.85rem; font-weight: 600; color: var(--primary-soft); margin-bottom: 0.8rem; }
+    .resident-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ГАЛЕРЕЯ */
+    .gallery-container { display: flex; flex-direction: column; gap: 1.8rem; }
+    .gallery-filter-tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: thin; }
+    .tab-btn {
+      background: var(--th-bg); border: 1px solid var(--card-border); color: var(--text-main);
+      padding: 0.6rem 1.2rem; border-radius: 18px; font-family: inherit; font-size: 0.85rem; font-weight: 700;
+      white-space: nowrap; transition: all 0.3s ease;
+    }
+    .tab-btn.active, .tab-btn:hover { background: var(--primary-soft); color: #fff; border-color: var(--primary-soft); box-shadow: var(--glow-light); transform: translateY(-2px); }
+
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.2rem; }
+    .gallery-item {
+      position: relative; height: 260px; border-radius: 22px; overflow: hidden; border: 1px solid var(--card-border);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .gallery-item:hover { transform: translateY(-6px) scale(1.02); border-color: var(--primary-soft); box-shadow: var(--glow-light); }
+    
+    .gallery-bg {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+      background: linear-gradient(135deg, var(--th-bg), rgba(120, 210, 214, 0.4));
+      transition: transform 0.5s ease;
+    }
+    .gallery-item:hover .gallery-bg { transform: scale(1.1); }
+
+    .gallery-content {
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(to top, rgba(7, 13, 30, 0.95) 0%, rgba(7, 13, 30, 0.4) 50%, transparent 100%);
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 1.2rem; color: #fff;
+    }
+    .gallery-number {
+      position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.2); color: var(--accent-color); font-size: 0.75rem; font-weight: 700;
+      padding: 0.2rem 0.6rem; border-radius: 12px;
+    }
+    .gallery-title { font-family: 'Cinzel Decorative', serif; font-size: 1.05rem; margin-bottom: 0.3rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    .gallery-desc { font-size: 0.8rem; opacity: 0.85; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+    /* ЛАЙТБОКС */
+    .lightbox-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(7, 13, 30, 0.85); backdrop-filter: blur(12px);
+      z-index: 2000; display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden; transition: all 0.4s ease; padding: 2rem;
+    }
+    .lightbox-overlay.active { opacity: 1; visibility: visible; }
+    
+    .lightbox-container {
+      position: relative; width: 100%; max-width: 1100px; height: 80vh; max-height: 700px;
+      border-radius: 35px; overflow: hidden; border: 1px solid var(--card-border);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.7); transform: scale(0.95); transition: transform 0.4s ease;
+    }
+    .lightbox-overlay.active .lightbox-container { transform: scale(1); }
+
+    .lightbox-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+    .lightbox-gradient {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(to top, rgba(7, 13, 30, 0.95) 0%, rgba(7, 13, 30, 0.5) 50%, rgba(7, 13, 30, 0.2) 100%);
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 3rem 4rem; color: #fff;
+    }
+    .lightbox-close {
+      position: absolute; top: 20px; right: 20px; width: 45px; height: 45px; border-radius: 50%;
+      background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3); color: #fff;
+      display: flex; align-items: center; justify-content: center; font-size: 1.5rem; z-index: 10; transition: all 0.3s ease;
+    }
+    .lightbox-close:hover { background: var(--primary-soft); transform: rotate(90deg); }
+
+    .lightbox-nav-btn {
+      position: absolute; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; border-radius: 50%;
+      background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 1.8rem;
+      display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.3s ease;
+    }
+    .lightbox-nav-btn:hover { background: var(--primary-soft); color: #070d1e; }
+    .lightbox-prev { left: 20px; }
+    .lightbox-next { right: 20px; }
+
+    .lightbox-badge {
+      display: inline-block; background: var(--primary-soft); color: #070d1e; font-weight: 700;
+      padding: 0.3rem 0.9rem; border-radius: 12px; font-size: 0.85rem; margin-bottom: 0.8rem; width: max-content;
+    }
+    .lightbox-title { font-family: 'Cinzel Decorative', serif; font-size: 2.2rem; margin-bottom: 1rem; }
+    .lightbox-desc { font-size: 1.1rem; line-height: 1.7; opacity: 0.9; max-width: 800px; }
+
+    /* БАННЕР ПЕРЕЕЗДА */
+    .relocate-banner {
+      background: linear-gradient(135deg, rgba(120, 210, 214, 0.2), rgba(245, 224, 172, 0.25));
+      border: 2px dashed var(--primary-soft); border-radius: 35px; padding: 3.5rem 2rem; text-align: center;
+      box-shadow: var(--shadow-soft);
+    }
+    .relocate-banner h2 { font-family: 'Cinzel Decorative', serif; font-size: 2.2rem; color: var(--text-main); margin-bottom: 1rem; }
+    .relocate-banner p { color: var(--text-muted); font-size: 1.05rem; line-height: 1.8; max-width: 650px; margin: 0 auto 2rem auto; }
+    .relocate-btn {
+      background: linear-gradient(135deg, var(--primary-soft), #5eb3b8); color: #fff;
+      padding: 0.9rem 2.2rem; border-radius: 25px; font-size: 1.1rem; font-weight: 700;
+      border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
+      transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(120, 210, 214, 0.5);
+    }
+    .relocate-btn:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 8px 25px rgba(120, 210, 214, 0.8); color: #fff; }
+
+    /* РЕКЛАМНЫЙ ПОП-АП (РЕТРО) */
+    .simple-ad-popup {
+      position: fixed; background: #ffffff; border: 3px outset #dfdfdf;
+      box-shadow: 5px 5px 20px rgba(0,0,0,0.4); z-index: 3000; display: none; padding: 4px; width: 300px;
+    }
+    .simple-ad-titlebar {
+      background: linear-gradient(90deg, #000080, #1084d0); color: #ffffff; padding: 4px 8px;
+      font-size: 0.8rem; font-weight: bold; display: flex; justify-content: space-between; align-items: center;
+    }
+    .simple-ad-close {
+      background: #c0c0c0; color: #000000; border: 1px outset #ffffff; width: 18px; height: 18px;
+      font-weight: bold; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .simple-ad-body { background: #ffffff; padding: 6px; text-align: center; border: 1px inset #dfdfdf; }
+    .simple-ad-img { width: 100%; height: 200px; object-fit: cover; display: block; border: 1px solid #7f7f7f; margin-bottom: 6px; }
+    .simple-ad-btn {
+      display: block; width: 100%; background: #e1e1e1; color: #000000; border: 2px outset #ffffff;
+      padding: 6px; font-weight: bold; font-size: 0.85rem; text-decoration: none; text-align: center;
+    }
+
+    footer { text-align: center; color: var(--text-muted); font-size: 0.9rem; display: flex; flex-direction: column; gap: 6px; }
+    .creators-tag { font-weight: 700; color: var(--primary-soft); }
+
+    @media (max-width: 700px) {
+      .section-box { padding: 1.8rem; }
+      .relocate-banner h2 { font-size: 1.6rem; }
+      .lightbox-container { height: 90vh; }
+      .lightbox-gradient { padding: 1.5rem; }
+      .lightbox-title { font-size: 1.5rem; }
+      .simple-ad-popup { width: 92%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- ШАПКА -->
+    <header>
+      <div class="top-bar">
+        <div class="left-group">
+          <a href="https://animunnug.github.io/LunariaRP/" target="_blank" class="download-badge">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Ресурспак</span>
+          </a>
+          
+          <div class="social-links">
+            <a href="https://discord.gg/ВАШ_СЕРВЕР" class="social-btn" target="_blank" title="Discord сервер">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.077.077 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="right-group">
+          <button class="control-btn" id="themeToggle" onclick="toggleTheme()" title="Сменить тему">
+            <svg id="themeIcon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </button>
+        </div>
+      </div>
+      
+      <img src="путь_к_картинке_лунария.png" alt="Лунария" class="logo-img">
+      <p class="subtitle">Столичный город магии, света и историй</p>
+      
+      <div class="metro-badge">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+        <span>Красная ветка, 1145</span>
+      </div>
+
+      <p class="description">Сердце нашего мира, раскинувшееся вблизи ключевых путей сообщения. Место, где переплетаются древние тайны, амбициозные проекты архитекторов и уютная атмосфера.</p>
+    </header>
+
+    <!-- ЛОР -->
+    <div class="section-box">
+      <h2 class="section-title">
+        <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Лор города
+      </h2>
+      <div class="lore-single">
+        <p>Основанная в эпоху великих переселений, Лунария начиналась как скромный приют для странников у мерцающего источника. Со временем город вырос в величественный бастион культуры и ремесел.</p>
+        <p>Добраться до нас можно через портал на Красной ветке (координата 1145), который служит главным связующим звеном с внешним миром.</p>
+      </div>
+    </div>
+
+    <!-- РУКОВОДСТВО -->
+    <div class="section-box">
+      <h2 class="section-title">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Руководство Лунарии
+      </h2>
+      <div class="residents-grid">
+        <div class="resident-card">
+          <div class="resident-avatar-container">
+            <img src="путь_к_картинке_мэра.png" alt="Moonray" class="resident-avatar">
+          </div>
+          <div class="resident-info">
+            <div class="resident-name">Moonray</div>
+            <div class="resident-role">Мэр города</div>
+            <div class="resident-desc">Главный градоначальник, идейный вдохновитель и защитник порядка.</div>
+          </div>
+        </div>
+        <div class="resident-card">
+          <div class="resident-avatar-container">
+            <img src="путь_к_картинке_жены.png" alt="Tommomy" class="resident-avatar">
+          </div>
+          <div class="resident-info">
+            <div class="resident-name">Tommomy</div>
+            <div class="resident-role">Чудесная жена мэра</div>
+            <div class="resident-desc">Хранительница красоты и гармонии в сердце столицы.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ГАЛЕРЕЯ -->
+    <div class="section-box">
+      <h2 class="section-title">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Интерактивная экскурсия по Лунарии
+      </h2>
+
+      <div class="gallery-container">
+        <div class="gallery-filter-tabs">
+          <button class="tab-btn active" onclick="filterGallery('all', event)">Все места (20)</button>
+          <button class="tab-btn" onclick="filterGallery('architecture', event)">Архитектура</button>
+          <button class="tab-btn" onclick="filterGallery('infrastructure', event)">Инфраструктура</button>
+          <button class="tab-btn" onclick="filterGallery('shops', event)">Торговые точки</button>
+          <button class="tab-btn" onclick="filterGallery('nature', event)">Природа</button>
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid">
+          <!-- Элементы галереи (1-20) -->
+          <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(0)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#01</span><div class="gallery-title">Центральная Библиотека</div><div class="gallery-desc">Хранилище древних фолиантов и чертежей.</div></div></div>
+          <div class="gallery-item" data-category="infrastructure" onclick="openLightboxByIndex(1)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#02</span><div class="gallery-title">Портал (Красная ветка, 1145)</div><div class="gallery-desc">Главный вход в наш город с внешних дорог.</div></div></div>
+          <div class="gallery-item" data-category="nature" onclick="openLightboxByIndex(2)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#03</span><div class="gallery-title">Лунная площадь</div><div class="gallery-desc">Просторная зона отдыха с монументом.</div></div></div>
+          <div class="gallery-item" data-category="shops" onclick="openLightboxByIndex(3)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#04</span><div class="gallery-title">Рынок «У Мэра»</div><div class="gallery-desc">Главный торговый базар столицы.</div></div></div>
+          <div class="gallery-item" data-category="shops" onclick="openLightboxByIndex(4)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#05</span><div class="gallery-title">Лавка Томмоми</div><div class="gallery-desc">Эксклюзивные строительные материалы.</div></div></div>
+          <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(5)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#06</span><div class="gallery-title">Резиденция Мэра</div><div class="gallery-desc">Официальный дом градоначальника Moonray.</div></div></div>
+          <div class="gallery-item" data-category="nature" onclick="openLightboxByIndex(6)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#07</span><div class="gallery-title">Сад Звездного Света</div><div class="gallery-desc">Ботанический парк с редкими растениями.</div></div></div>
+          <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(7)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#08</span><div class="gallery-title">Башня Магов</div><div class="gallery-desc">Изучение магических артефактов.</div></div></div>
+          <div class="gallery-item" data-category="infrastructure" onclick="openLightboxByIndex(8)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#09</span><div class="gallery-title">Портал измерений</div><div class="gallery-desc">Стабильный переход в дальние миры.</div></div></div>
+          <div class="gallery-item" data-category="nature" onclick="openLightboxByIndex(9)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#10</span><div class="gallery-title">Набережная Сияния</div><div class="gallery-desc">Живописный берег городского озера.</div></div></div>
+          <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(10)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#11</span><div class="gallery-title">Музей Истории</div><div class="gallery-desc">Летопись и важнейшие вехи развития.</div></div></div>
+          <div class="gallery-item" data-category="shops" onclick="openLightboxByIndex(11)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#12</span><div class="gallery-title">Аукционный дом</div><div class="gallery-desc">Торги за ценнейшие артефакты.</div></div></div>
+          <div class="gallery-item" data-category="nature" onclick="openLightboxByIndex(12)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#13</span><div class="gallery-title">Парк Весны</div><div class="gallery-desc">Тихое место для отдыха.</div></div></div>
+          <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(13)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#14</span><div class="gallery-title">Таверна «Счастливый странник»</div><div class="gallery-desc">Теплая атмосфера и серверные байки.</div></div></div>
+          <div class="gallery-item" data-category="infrastructure" onclick="openLightboxByIndex(14)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#15</span><div class="gallery-title">Сторожевая вышка</div><div class="gallery-desc">Высотный дозорный пункт.</div></div></div>
+          <div class="gallery-item" data-category="shops" onclick="openLightboxByIndex(15)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#16</span><div class="gallery-title">Рыды «Самоцвет»</div><div class="gallery-desc">Частные магазинчики местных жителей.</div></div></div>
+          <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(16)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#17</span><div class="gallery-title">Театр Искусств</div><div class="gallery-desc">Сцена для проведения праздников.</div></div></div>
+          <div class="gallery-item" data-category="infrastructure" onclick="openLightboxByIndex(17)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#18</span><div class="gallery-title">Банк Лунарии</div><div class="gallery-desc">Надежное хранилище ценностей.</div></div></div>
+          <div class="gallery-item" data-category="nature" onclick="openLightboxByIndex(18)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#19</span><div class="gallery-title">Лунный пруд</div><div class="gallery-desc">Водоем с отражением звезд.</div></div></div>
+          <div class="gallery-item" data-category="architecture" onclick="openLightboxByIndex(19)"><img class="gallery-bg" src="" alt=""><div class="gallery-content"><span class="gallery-number">#20</span><div class="gallery-title">Зал Славы</div><div class="gallery-desc">Память о великих жителях столицы.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- БАННЕР ПЕРЕЕЗДА -->
+    <div class="relocate-banner">
+      <h2>Стань частью нашей истории!</h2>
+      <p>Лунария открывает свои двери для новых жителей, амбициозных строителей и искателей приключений. Прибывайте через портал на Красной ветке (1145)!</p>
+      <a href="https://discord.gg/ВАШ_СЕРВЕР" target="_blank" class="relocate-btn">
+        <span>Переехать в Лунарию</span>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <footer>
+      <p>✨ С любовью из Лунарии | SPm Server</p>
+      <p class="creators-tag">Столичный портал города</p>
+    </footer>
+  </div>
+
+  <!-- ЛАЙТБОКС -->
+  <div id="lightboxOverlay" class="lightbox-overlay" onclick="closeLightbox(event)">
+    <div class="lightbox-container">
+      <button class="lightbox-nav-btn lightbox-prev" onclick="changeLightboxSlide(-1, event)">&#10094;</button>
+      <button class="lightbox-nav-btn lightbox-next" onclick="changeLightboxSlide(1, event)">&#10095;</button>
+      <img id="lightboxImg" class="lightbox-bg" src="" alt="">
+      <div class="lightbox-gradient">
+        <button class="lightbox-close" onclick="forceCloseLightbox()">×</button>
+        <div id="lightboxBadge" class="lightbox-badge">Категория</div>
+        <h2 id="lightboxTitle" class="lightbox-title">Заголовок</h2>
+        <p id="lightboxDesc" class="lightbox-desc">Описание места...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- РЕКЛАМНЫЙ ПОП-АП -->
+  <div id="simpleAd" class="simple-ad-popup">
+    <div class="simple-ad-titlebar">
+      <span>Реклама: Специальное предложение!</span>
+      <button class="simple-ad-close" onclick="closeSimpleAd()">X</button>
+    </div>
+    <div class="simple-ad-body">
+      <img id="simpleAdImg" class="simple-ad-img" src="" alt="Реклама">
+      <a href="#" class="simple-ad-btn" id="simpleAdBtn" target="_blank">Нажмите для перехода &gt;&gt;</a>
+    </div>
+  </div>
+
+  <script>
+    // Искры от мышки
+    let lastSparkleTime = 0;
+    document.addEventListener('mousemove', function(e) {
+      const now = Date.now();
+      if (now - lastSparkleTime > 40 && Math.random() > 0.3) { 
+        lastSparkleTime = now;
+        const sparkle = document.createElement('div');
+        sparkle.className = 'cursor-sparkle';
+        sparkle.style.left = e.pageX + 'px';
+        sparkle.style.top = e.pageY + 'px';
+        document.body.appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 600);
+      }
+    });
+
+    // Темы
+    function toggleTheme() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const newTheme = isDark ? 'light' : 'dark';
+      const themeIcon = document.getElementById('themeIcon');
+      themeIcon.innerHTML = newTheme === 'dark' 
+        ? `<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>` 
+        : `<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>`;
+      document.documentElement.setAttribute('data-theme', newTheme);
+    }
+
+    // Фильтрация галереи
+    function filterGallery(category, event) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      document.querySelectorAll('.gallery-item').forEach(item => {
+        item.style.display = (category === 'all' || item.getAttribute('data-category') === category) ? 'block' : 'none';
+      });
+    }
+
+    const tourData = [
+      { title: "Центральная Библиотека", desc: "Хранилище древних фолиантов, секретов кастомных текстур и чертежей построек.", category: "Архитектура", img: "" },
+      { title: "Портал (Красная ветка, 1145)", desc: "Точка входа в Лунарию с общей транспортной системы.", category: "Инфраструктура", img: "" },
+      { title: "Лунная площадь", desc: "Просторная зона отдыха с величественным монументом и уютными лавочками.", category: "Природа", img: "" },
+      { title: "Рынок «У Мэра»", desc: "Центральная торговая точка, где жители обмениваются ресурсами.", category: "Торговые точки", img: "" },
+      { title: "Лавка редких блоков Томмоми", desc: "Магазин эксклюзивных строительных материалов.", category: "Торговые точки", img: "" },
+      { title: "Резиденция Мэра", desc: "Официальный дом градоначальника Moonray.", category: "Архитектура", img: "" },
+      { title: "Сад Звездного Света", desc: "Ботанический парк с редкими светящимися растениями.", category: "Природа", img: "" },
+      { title: "Башня Магов", desc: "Место изучения магических артефактов.", category: "Архитектура", img: "" },
+      { title: "Портал измерений", desc: "Стабильный переход в дальние миры сервера.", category: "Инфраструктура", img: "" },
+      { title: "Набережная Сияния", desc: "Живописный берег городского озера.", category: "Природа", img: "" },
+      { title: "Музей Истории", desc: "Летопись и важнейшие вехи развития города.", category: "Архитектура", img: "" },
+      { title: "Аукционный дом", desc: "Место проведения торгов за ценнейшие артефакты.", category: "Торговые точки", img: "" },
+      { title: "Парк Весны", desc: "Тихое место для отдыха под кронами деревьев.", category: "Природа", img: "" },
+      { title: "Таверна «Счастливый странник»", desc: "Теплая атмосфера и серверные байки.", category: "Архитектура", img: "" },
+      { title: "Сторожевая вышка", desc: "Высотный дозорный пункт внешней границы.", category: "Инфраструктура", img: "" },
+      { title: "Торговые ряды «Самоцвет»", desc: "Небольшие частные магазинчики жителей.", category: "Торговые точки", img: "" },
+      { title: "Театр Искусств", desc: "Сцена для проведения праздников.", category: "Архитектура", img: "" },
+      { title: "Банк Лунарии", desc: "Надежное хранилище ценностей.", category: "Инфраструктура", img: "" },
+      { title: "Лунный пруд", desc: "Водоем с отражением звезд.", category: "Природа", img: "" },
+      { title: "Зал Славы", desc: "Память о великих жителях и героях.", category: "Архитектура", img: "" }
+    ];
+
+    let currentTourIndex = 0;
+    function openLightboxByIndex(index) {
+      currentTourIndex = index;
+      updateLightboxContent();
+      document.getElementById('lightboxOverlay').classList.add('active');
+    }
+    function updateLightboxContent() {
+      const item = tourData[currentTourIndex];
+      document.getElementById('lightboxImg').src = item.img;
+      document.getElementById('lightboxTitle').innerText = item.title;
+      document.getElementById('lightboxDesc').innerText = item.desc;
+      document.getElementById('lightboxBadge').innerText = item.category;
+    }
+    function changeLightboxSlide(direction, event) {
+      if (event) event.stopPropagation();
+      currentTourIndex = (currentTourIndex + direction + tourData.length) % tourData.length;
+      updateLightboxContent();
+    }
+    function closeLightbox(e) { if (e.target.id === 'lightboxOverlay') forceCloseLightbox(); }
+    function forceCloseLightbox() { document.getElementById('lightboxOverlay').classList.remove('active'); }
+
+    // ЛОГИКА РЕКЛАМЫ (С КВИТАНЦИЕЙ ЧЕРЕЗ localStorage НА 2 ЗАКРЫТИЯ)
+    const adList = [
+      { img: "путь_к_рекламной_гифке_1.gif", link: "https://discord.gg/ВАШ_СЕРВЕР" },
+      { img: "путь_к_рекламной_картинке_2.png", link: "https://modrinth.com" }
+    ];
+
+    function showSimpleAd() {
+      const closedCount = parseInt(localStorage.getItem('adsClosedCount') || '0', 10);
+      if (closedCount >= 2) return; // Если закрыли 2 раза — больше не показываем
+
+      const randomAd = adList[Math.floor(Math.random() * adList.length)];
+      document.getElementById('simpleAdImg').src = randomAd.img;
+      document.getElementById('simpleAdBtn').href = randomAd.link;
+      
+      const adPopup = document.getElementById('simpleAd');
+      adPopup.style.left = Math.max(10, Math.floor(Math.random() * (window.innerWidth - 330))) + 'px';
+      adPopup.style.top = Math.max(10, Math.floor(Math.random() * (window.innerHeight - 280))) + 'px';
+      adPopup.style.display = 'block';
+    }
+
+    function closeSimpleAd() {
+      document.getElementById('simpleAd').style.display = 'none';
+      
+      let closedCount = parseInt(localStorage.getItem('adsClosedCount') || '0', 10) + 1;
+      localStorage.setItem('adsClosedCount', closedCount);
+
+      if (closedCount < 2) {
+        setTimeout(showSimpleAd, 25000); // Повторный показ через 25 сек, если еще не закрыли дважды
+      }
+    }
+
+    setTimeout(showSimpleAd, 10000); // Первый показ через 10 секунд
+  </script>
+</body>
+</html>
